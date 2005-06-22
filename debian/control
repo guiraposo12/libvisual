@@ -1,0 +1,43 @@
+Source: libvisual
+Section: devel
+Priority: optional
+Maintainer: David Schleef <ds@schleef.org>
+Build-Depends: cdbs, debhelper, chrpath, gcc-3.4, g++-3.4
+Standards-Version: 3.5.6
+
+Package: libvisual0.2-dev
+Section: libdevel
+Architecture: any
+Depends: libvisual0.2 (= ${Source-Version}), pkg-config, libc6-dev | libc-dev
+Description: Audio visualisation framework (development package)
+ Libvisual is a generic visualisation framework that allows
+ applications to easily access and manage visualisation plugins.
+ Audio visualisation is the process of making pretty moving images
+ that are correlated in some way to the audio currently being played
+ by a media player.  Most audio visualisation is tied to a specific
+ application or media player, making it difficult to share code.
+ Libvisual allows applications to use existing visualisation plugins
+ written for the libvisual framework.
+ .
+ This package contains development headers and libraries used to
+ compile applications that use libvisual.
+
+Package: libvisual0.2
+Section: libdevel
+Architecture: any
+Depends: ${shlibs:Depends}
+Recommends: libvisual0.2-plugins
+Description: Audio visualization framework
+ Libvisual is a generic visualisation framework that allows
+ applications to easily access and manage visualisation plugins.
+ Audio visualisation is the process of making pretty moving images
+ that are correlated in some way to the audio currently being played
+ by a media player.  Most audio visualisation is tied to a specific
+ application or media player, making it difficult to share code.
+ Libvisual allows applications to use existing visualisation plugins
+ written for the libvisual framework.
+ .
+ This package contains the runtime libraries for libvisual.  Libvisual
+ is not very useful without visualisation plugins, so it is highly
+ recommended to install the libvisual0.2-plugins package.
+
