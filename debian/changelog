@@ -1,3 +1,10 @@
+libvisual (0.2.0-2) unstable; urgency=low
+
+  * Fix build problem on powerpc (Closes: #333070)  From Alberto
+    Ruffato.
+
+ -- David Schleef <ds@schleef.org>  Mon, 10 Oct 2005 18:11:52 -0700
+
 libvisual (0.2.0-1) unstable; urgency=low
 
   * New package
