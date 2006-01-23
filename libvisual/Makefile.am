@@ -13,6 +13,7 @@ library_include_HEADERS = lvconfig.h libvisual.h lv_actor.h \
 			  lv_transform.h
 
 lib_LTLIBRARIES = libvisual.la
+noinst_LTLIBRARIES = libvisualmmx.la
 
 DEFS = @DEFS@
 
@@ -26,11 +27,16 @@ INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libvisual \
 	   -I$(top_builddir) -I$(top_builddir)/libvisual
 
 libvisual_la_LDFLAGS = -export-dynamic -no-undefined
+libvisual_la_LIBADD = libvisualmmx.la
 
 libvisual_la_SOURCES = lv_actor.c lv_input.c lv_event.c \
-		       lv_bin.c lv_plugin.c lv_video.c lv_video_mmx.c lv_mem.c \
+		       lv_bin.c lv_plugin.c lv_video.c lv_mem.c \
 		       lv_audio.c lv_fft.c lv_list.c lv_log.c lv_palette.c \
 		       lv_libvisual.c lv_songinfo.c lv_morph.c lv_bmp.c lv_param.c \
 		       lv_cpu.c lv_color.c lv_time.c lv_random.c lv_error.c lv_ui.c \
 		       lv_thread.c lv_object.c lv_transform.c
+
+libvisualmmx_la_SOURCES = lv_video_mmx.c
+libvisualmmx_la_CFLAGS = -DPLUGPATH="\"@LIBVISUAL_PLUGINS_BASE_DIR@\"" \
+	-mmmx
 

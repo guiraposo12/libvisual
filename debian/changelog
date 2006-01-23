@@ -1,3 +1,12 @@
+libvisual (0.2.0-3) unstable; urgency=low
+
+  * Fix the build problems on gcc-4.0 and drop gcc-3.4 dependency.
+    (Closes: #337480, #343005)
+  * Fix spelling in description. (Closes: #334466)
+  * Move libvisual0.2 to section: libs (duh) (Closes: #349296)
+
+ -- David Schleef <ds@schleef.org>  Sun, 22 Jan 2006 17:36:25 -0800
+
 libvisual (0.2.0-2) unstable; urgency=low
 
   * Fix build problem on powerpc (Closes: #333070)  From Alberto
