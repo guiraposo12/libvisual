@@ -58,8 +58,8 @@ int _lv_blit_overlay_alpha32_mmx (VisVideo *dest, const VisVideo *src, int x, in
 	
 	/* Reset some regs */
 	__asm __volatile
-		("\n\t pxor %%mm6, %%mm6"
-		 ::: "mm6");
+		("\n\t pxor %%mm6, %%mm6" ::
+		 );
 	
 	destbuf += ((y > 0 ? y : 0) * dest->pitch) + (x > 0 ? x * 4 : 0);
 	srcbuf += ((y < 0 ? abs(y) : 0) * src->pitch) + (x < 0 ? abs(x) * 4 : 0);
@@ -90,7 +90,7 @@ int _lv_blit_overlay_alpha32_mmx (VisVideo *dest, const VisVideo *src, int x, in
 				 : [dest] "=m" (*destbuf)
 				 : [dpix] "m" (*destbuf)
 				 , [spix] "m" (*srcbuf)
-				 : "mm0", "mm1", "mm2", "mm3", "mm4", "mm5", "mm6", "mm7");
+				 );
 
 			destbuf += 4;
 			srcbuf += 4;
@@ -237,7 +237,7 @@ int _lv_scale_bilinear_32_mmx (VisVideo *dest, const VisVideo *src)
 				, [pixel_l] "m"(src_pixel_rowl[u>>16])
 				, [fracu]   "g"(fracU)
 				, [fracv]   "g"(fracV)
-				: "mm0", "mm1", "mm2", "mm3", "mm4", "mm5", "mm6", "mm7");
+				);
 			
 			++dest_pixel;
 		}

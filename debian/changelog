@@ -1,3 +1,10 @@
+libvisual (0.2.0-4) unstable; urgency=low
+
+  * Remove -mmx from CFLAGS (Closes #349479), and fix asm code to
+    compile.
+
+ -- David Schleef <ds@schleef.org>  Wed, 25 Jan 2006 23:26:03 -0800
+
 libvisual (0.2.0-3) unstable; urgency=low
 
   * Fix the build problems on gcc-4.0 and drop gcc-3.4 dependency.

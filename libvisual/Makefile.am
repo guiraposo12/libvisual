@@ -37,6 +37,5 @@ libvisual_la_SOURCES = lv_actor.c lv_input.c lv_event.c \
 		       lv_thread.c lv_object.c lv_transform.c
 
 libvisualmmx_la_SOURCES = lv_video_mmx.c
-libvisualmmx_la_CFLAGS = -DPLUGPATH="\"@LIBVISUAL_PLUGINS_BASE_DIR@\"" \
-	-mmmx
+libvisualmmx_la_CFLAGS = -DPLUGPATH="\"@LIBVISUAL_PLUGINS_BASE_DIR@\""
 
