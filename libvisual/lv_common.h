@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_common.h,v 1.14 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -24,39 +24,12 @@
 #ifndef _LV_COMMON_H
 #define _LV_COMMON_H
 
+#include <libvisual/lv_defines.h>
+
 #include <libvisual/lv_mem.h>
 #include <libvisual/lv_log.h>
 #include <libvisual/lv_error.h>
 #include <libvisual/lv_types.h>
 #include <libvisual/lv_object.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
-#ifndef NULL
-/**
- * NULL define.
- */
-#define NULL	(0)
-#endif
-
-#ifndef FALSE
-/**
- * FALSE define.
- */
-#define FALSE	(0)
-#endif
-
-#ifndef TRUE
-/**
- * TRUE define.
- */
-#define TRUE	(!FALSE)
-#endif
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-	
 #endif /* _LV_COMMON_H */

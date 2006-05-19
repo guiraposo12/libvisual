@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_songinfo.c,v 1.24 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -27,6 +27,8 @@
 #include <string.h>
 
 #include "lv_common.h"
+#include "lv_libvisual.h"
+#include "lv_param.h"
 #include "lv_songinfo.h"
 
 static int songinfo_dtor (VisObject *object)
@@ -60,13 +62,29 @@ VisSongInfo *visual_songinfo_new (VisSongInfoType type)
 	VisSongInfo *songinfo;
 
 	songinfo = visual_mem_new0 (VisSongInfo, 1);
-	
-	/* Do the VisObject initialization */
-	visual_object_initialize (VISUAL_OBJECT (songinfo), TRUE, songinfo_dtor);
 
-	songinfo->type = type;
+	visual_songinfo_init (songinfo, type);
+
+	/* Do the VisObject initialization */
+	visual_object_set_allocated (VISUAL_OBJECT (songinfo), TRUE);
+	visual_object_ref (VISUAL_OBJECT (songinfo));
 
 	return songinfo;
+}
+
+int visual_songinfo_init (VisSongInfo *songinfo, VisSongInfoType type)
+{
+	visual_log_return_val_if_fail (songinfo != NULL, -VISUAL_ERROR_SONGINFO_NULL);
+
+	/* Do the VisObject initialization */
+	visual_object_clear (VISUAL_OBJECT (songinfo));
+	visual_object_set_dtor (VISUAL_OBJECT (songinfo), songinfo_dtor);
+	visual_object_set_allocated (VISUAL_OBJECT (songinfo), FALSE);
+
+	/* Set the VisSongInfo data */
+	songinfo->type = type;
+
+	return VISUAL_OK;
 }
 
 /**
@@ -253,34 +271,31 @@ int visual_songinfo_set_song (VisSongInfo *songinfo, char *song)
  */
 int visual_songinfo_set_cover (VisSongInfo *songinfo, VisVideo *cover)
 {
-	VisVideo dtransform;
+	VisParamContainer *params;
+	VisParamEntry *xparam;
+	VisParamEntry *yparam;
+	int cawidth = 64;
+	int caheight = 64;
 
 	visual_log_return_val_if_fail (songinfo != NULL, -VISUAL_ERROR_SONGINFO_NULL);
 
 	if (songinfo->cover != NULL)
 		visual_object_unref (VISUAL_OBJECT (songinfo->cover));
 
-	/* The coverart image */
-	songinfo->cover = visual_video_new ();
-	visual_video_set_depth (songinfo->cover, VISUAL_VIDEO_DEPTH_32BIT);
-	visual_video_set_dimension (songinfo->cover, 64, 64);
-	visual_video_allocate_buffer (songinfo->cover);
+	/* Get the desired cover art size */
+	params = visual_get_params ();
+	xparam = visual_param_container_get (params, "songinfo cover size x");
+	yparam = visual_param_container_get (params, "songinfo cover size y");
 	
-	/* The temp depth transform video */
-	memset (&dtransform, 0, sizeof (VisVideo));
-
-	visual_video_set_depth (&dtransform, VISUAL_VIDEO_DEPTH_32BIT);
-	visual_video_set_dimension (&dtransform, cover->width, cover->height);
-	visual_video_allocate_buffer (&dtransform);
-
-	visual_video_depth_transform (&dtransform, cover);
-
-	/* Now scale it */
-	/* FIXME make cover image size settable ??? */
-	visual_video_scale (songinfo->cover, &dtransform, VISUAL_VIDEO_SCALE_BILINEAR);
-
-	/* Unref the depth transform video */
-	visual_object_unref (VISUAL_OBJECT (&dtransform));
+	if (xparam != NULL && yparam != NULL) {
+		cawidth = visual_param_entry_get_integer (xparam);
+		caheight = visual_param_entry_get_integer (yparam);
+	}
+	
+	/* The coverart image */
+	songinfo->cover = visual_video_scale_depth_new (cover, cawidth, caheight,
+			VISUAL_VIDEO_DEPTH_32BIT,
+			VISUAL_VIDEO_SCALE_BILINEAR);
 
 	return VISUAL_OK;
 }

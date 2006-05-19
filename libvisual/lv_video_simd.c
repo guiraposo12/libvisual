@@ -1,11 +1,11 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *	    Jean-Christophe Hoelt <jeko@ios-software.com>
  *
- * $Id:
+ * $Id: lv_video_simd.c,v 1.6 2006/02/05 18:45:57 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -31,41 +31,16 @@
 #include "lv_common.h"
 #include "lv_video.h"
 
-int _lv_blit_overlay_alpha32_mmx (VisVideo *dest, const VisVideo *src, int x, int y)
+int _lv_blit_overlay_alphasrc_mmx (VisVideo *dest, VisVideo *src)
 {
-#ifdef VISUAL_ARCH_X86
-	uint8_t *destbuf;
-	uint8_t *srcbuf;
-	int lwidth = (x + src->width);
-	int lwidth4;
-	int lheight = (y + src->height);
-	int ya, xa;
+#if defined(VISUAL_ARCH_X86) || defined(VISUAL_ARCH_X86_64)
+	int i, j;
+	uint8_t *destbuf = visual_video_get_pixels (dest);
+	uint8_t *srcbuf = visual_video_get_pixels (src);
 	uint8_t alpha;
 
-	if (lwidth > dest->width)
-		lwidth += dest->width - lwidth;
-
-	if (lheight > dest->height)
-		lheight += dest->height - lheight;
-
-	destbuf = dest->pixels;
-	srcbuf = src->pixels;
-
-	if (lwidth < 0)
-		return VISUAL_OK;
-
-	lwidth4 = lwidth * 4;
-	
-	/* Reset some regs */
-	__asm __volatile
-		("\n\t pxor %%mm6, %%mm6" ::
-		 );
-	
-	destbuf += ((y > 0 ? y : 0) * dest->pitch) + (x > 0 ? x * 4 : 0);
-	srcbuf += ((y < 0 ? abs(y) : 0) * src->pitch) + (x < 0 ? abs(x) * 4 : 0);
-	for (ya = y > 0 ? y : 0; ya < lheight; ya++) {
-		for (xa = x > 0 ? x * 4 : 0; xa < lwidth4; xa += 4) {
-			/* pixel = ((alpha * ((src - dest)) / 255) + dest) */
+	for (i = 0; i < src->height; i++) {
+		for (j = 0; j < src->width; j++) {
 			__asm __volatile
 				("\n\t movd %[spix], %%mm0"
 				 "\n\t movd %[dpix], %%mm1"
@@ -89,20 +64,15 @@ int _lv_blit_overlay_alpha32_mmx (VisVideo *dest, const VisVideo *src, int x, in
 				 "\n\t movd %%mm0, %[dest]"
 				 : [dest] "=m" (*destbuf)
 				 : [dpix] "m" (*destbuf)
-				 , [spix] "m" (*srcbuf)
-				 );
+				 , [spix] "m" (*srcbuf));
 
 			destbuf += 4;
 			srcbuf += 4;
 		}
 
-		destbuf += (dest->pitch - ((lwidth - x) * 4)) - (x < 0 ? x * 4 : 0);
-		srcbuf += x < 0 ? abs(x) * 4 : 0;
-		srcbuf += x + src->width > dest->width ? ((x + (src->pitch / 4)) - dest->width) * 4 : 0;
+		destbuf += dest->pitch - (dest->width * dest->bpp);
+		srcbuf += src->pitch - (src->width * src->bpp);
 	}
-
-	__asm __volatile
-		("\n\t emms");
 
 	return VISUAL_OK;
 #else /* !VISUAL_ARCH_X86 */
@@ -110,21 +80,19 @@ int _lv_blit_overlay_alpha32_mmx (VisVideo *dest, const VisVideo *src, int x, in
 #endif
 }
 
-int _lv_scale_bilinear_32_mmx (VisVideo *dest, const VisVideo *src)
+int _lv_scale_bilinear_32_mmx (VisVideo *dest, VisVideo *src)
 {
-#ifdef VISUAL_ARCH_X86
+#if defined(VISUAL_ARCH_X86) || defined(VISUAL_ARCH_X86_64)
 	uint32_t y;
 	uint32_t u, v, du, dv; /* fixed point 16.16 */
 	uint32_t *dest_pixel, *src_pixel_rowu, *src_pixel_rowl;
 
-	dest_pixel = dest->pixels;
+	dest_pixel = visual_video_get_pixels (dest);
 
 	du = ((src->width - 1)  << 16) / dest->width;
 	dv = ((src->height - 1) << 16) / dest->height;
 	v = 0;
 
-	__asm__ __volatile__ ("\n\temms");
-	
 	for (y = dest->height; y--; v += dv) {
 		uint32_t x;
 		uint32_t fracU, fracV;     /* fixed point 28.4 [0,1[    */
@@ -140,13 +108,12 @@ int _lv_scale_bilinear_32_mmx (VisVideo *dest, const VisVideo *src)
 		fracV = ((v & 0xffff) >> 12) | 0x100000;
 		u = 0;
 
-
 		for (x = dest->width - 1; x--; u += du) {
 
 			/* fracU = frac(u) = u & 0xffff */
 			/* fixed point format convertion: fracU >>= 8) */
 			fracU  = ((u & 0xffff) >> 12) | 0x100000;
-			
+
 			__asm__ __volatile__
 				("\n\t pxor %%mm7, %%mm7"
 				 /* Prefetching does not show improvement on my Duron (maybe due to its small cache?) */
@@ -235,19 +202,16 @@ int _lv_scale_bilinear_32_mmx (VisVideo *dest, const VisVideo *src)
 				: [output]  "=m"(*dest_pixel)
 				: [pixel_u] "m"(src_pixel_rowu[u>>16])
 				, [pixel_l] "m"(src_pixel_rowl[u>>16])
-				, [fracu]   "g"(fracU)
-				, [fracv]   "g"(fracV)
-				);
-			
+				, [fracu]   "m"(fracU)
+				, [fracv]   "m"(fracV));
+
 			++dest_pixel;
 		}
 
-		memset (dest_pixel, 0, (dest->pitch - ((dest->width - 1) * 4)));
 		dest_pixel += (dest->pitch / 4) - ((dest->width - 1));
-
 	}
 
-	__asm__ __volatile__ ("\n\temms");
+	__asm__ __volatile__ ("\n\t emms");
 
 	return VISUAL_OK;
 #else /* !VISUAL_ARCH_X86 */

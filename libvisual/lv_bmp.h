@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_bmp.h,v 1.6 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -26,15 +26,11 @@
 
 #include <libvisual/lv_video.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+VISUAL_BEGIN_DECLS
 
 int visual_bitmap_load (VisVideo *video, const char *filename);
 VisVideo *visual_bitmap_load_new_video (const char *filename);
-	
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
+VISUAL_END_DECLS
 
 #endif /* _LV_BMP_H */

@@ -5,8 +5,12 @@ include /usr/share/cdbs/1/class/autotools.mk
 
 DEB_CONFIGURE_EXTRA_FLAGS := --enable-static
 
-install/libvisual0.2::
-	find debian/libvisual0.2 -name '*.so' | xargs chrpath --delete
+install/libvisual-0.4-0::
+	mkdir -p debian/libvisual-0.4-0/usr/lib/libvisual/actor
+	mkdir -p debian/libvisual-0.4-0/usr/lib/libvisual/input
+	mkdir -p debian/libvisual-0.4-0/usr/lib/libvisual/morph
+	mkdir -p debian/libvisual-0.4-0/usr/lib/libvisual/transform
+	find debian/libvisual-0.4-0 -name '*.so' | xargs chrpath --delete
 
 install::
 

@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_color.c,v 1.18.2.1 2006/03/04 12:32:47 descender Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -29,6 +29,11 @@
 #include "lv_common.h"
 #include "lv_color.h"
 
+typedef struct {
+	uint16_t b:5, g:6, r:5;
+} _color16;
+
+
 /**
  * @defgroup VisColor VisColor
  * @{
@@ -49,6 +54,27 @@ VisColor *visual_color_new ()
 	visual_object_initialize (VISUAL_OBJECT (color), TRUE, NULL);
 
 	return color;
+}
+
+/**
+ * Sets the VisColor to a certain rgb value.
+ *
+ * @param color Pointer to the VisColor to which the rgb value is set.
+ * @param r The red value.
+ * @param g The green value.
+ * @param b The blue value.
+ *
+ * @return VISUAL_OK on succes, -VISUAL_ERROR_COLOR_NULL on failure.
+ */
+int visual_color_set (VisColor *color, uint8_t r, uint8_t g, uint8_t b)
+{
+	visual_log_return_val_if_fail (color != NULL, -VISUAL_ERROR_COLOR_NULL);
+
+	color->r = r;
+	color->g = g;
+	color->b = b;
+
+	return VISUAL_OK;
 }
 
 /**
@@ -112,10 +138,8 @@ int visual_color_from_hsv (VisColor *color, float h, float s, float v)
 			break;
 	}
 
-	color->r = (float) r * 255;
-	color->g = (float) g * 255;
-	color->b = (float) b * 255;
-	
+	visual_color_set (color, (float) r * 255, (float) g * 255, (float) b * 255);
+
 	return VISUAL_OK;
 }
 
@@ -195,15 +219,96 @@ int visual_color_copy (VisColor *dest, VisColor *src)
 {
 	visual_log_return_val_if_fail (dest != NULL, -VISUAL_ERROR_COLOR_NULL);
 	visual_log_return_val_if_fail (src != NULL, -VISUAL_ERROR_COLOR_NULL);
-	
-	dest->r = src->r;
-	dest->g = src->g;
-	dest->b = src->b;
-	
+
+	visual_color_set (dest, src->r, src->g, src->b);
+
 	/* You never know ;) */
 	dest->unused = src->unused;
 
 	return VISUAL_OK;
+}
+
+int visual_color_from_uint32 (VisColor *color, uint32_t rgb)
+{
+	uint8_t *colors = (uint8_t *) &rgb;
+
+	visual_log_return_val_if_fail (color != NULL, -VISUAL_ERROR_COLOR_NULL);
+
+	color->r = colors[0];
+	color->g = colors[1];
+	color->b = colors[2];
+
+	return VISUAL_OK;
+}
+
+int visual_color_from_uint16 (VisColor *color, uint16_t rgb)
+{
+	_color16 *colors = (_color16 *) &rgb;
+
+	visual_log_return_val_if_fail (color != NULL, -VISUAL_ERROR_COLOR_NULL);
+
+	color->r = colors->r << 2;
+	color->g = colors->g << 3;
+	color->b = colors->b << 2;
+
+	return VISUAL_OK;
+}
+
+uint32_t visual_color_to_uint32 (VisColor *color)
+{
+	uint32_t colors;
+
+	visual_log_return_val_if_fail (color != NULL, 0);
+
+	colors = (256 << 24) |
+		(color->r << 16) |
+		(color->g << 8) |
+		(color->b);
+
+	return colors;
+}
+
+uint16_t visual_color_to_uint16 (VisColor *color)
+{
+	_color16 colors;
+
+	visual_log_return_val_if_fail (color != NULL, 0);
+
+	colors.r = color->r >> 2;
+	colors.g = color->g >> 3;
+	colors.b = color->b >> 2;
+
+	return *((uint16_t *) &colors);
+}
+
+VisColor *visual_color_black ()
+{
+	static VisColor black;
+	static int black_initialized = FALSE;
+
+	if (black_initialized == FALSE) {
+		visual_object_initialize (VISUAL_OBJECT (&black), FALSE, NULL);
+		visual_color_set (&black, 0, 0, 0);
+
+		black_initialized = TRUE;
+	}
+
+	return &black;
+}
+
+VisColor *visual_color_white ()
+{
+	static VisColor white;
+	static int white_initialized = FALSE;
+
+	if (white_initialized == FALSE) {
+		visual_object_initialize (VISUAL_OBJECT (&white), FALSE, NULL);
+		visual_color_set (&white, 255, 255, 255);
+
+		white_initialized = TRUE;
+	}
+
+	return &white;
 }
 
 /**

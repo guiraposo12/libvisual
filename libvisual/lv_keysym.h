@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_keysym.h,v 1.6 2006/02/13 20:54:08 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -24,9 +24,7 @@
 #ifndef _LV_KEYSYM_H
 #define _LV_KEYSYM_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+VISUAL_BEGIN_DECLS
 
 /**
  * Enumerate values used within the libvisual event system for keyboard events.
@@ -81,7 +79,7 @@ typedef enum {
 	VKEY_GREATER		= 62,
 	VKEY_QUESTION		= 63,
 	VKEY_AT			= 64,
-	
+
 	/* Skip uppercase here because it's done via the VisKeyMod */
 	VKEY_LEFTBRACKET	= 91,
 	VKEY_BACKSLASH		= 92,
@@ -228,8 +226,6 @@ struct _VisKeySym {
 	int		mod;	/**< Modifier vlags, Using key modifiers from the VisKeyMod enumerate. */
 };
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+VISUAL_END_DECLS
 
 #endif /* _LV_KEYSYM_H */

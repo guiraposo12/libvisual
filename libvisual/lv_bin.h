@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_bin.h,v 1.9 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -30,11 +30,9 @@
 #include <libvisual/lv_video.h>
 #include <libvisual/lv_time.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+VISUAL_BEGIN_DECLS
 
-#define VISUAL_BIN(obj)					(VISUAL_CHECK_CAST ((obj), 0, VisBin))
+#define VISUAL_BIN(obj)					(VISUAL_CHECK_CAST ((obj), VisBin))
 
 typedef enum {
 	VISUAL_SWITCH_STYLE_DIRECT,
@@ -123,11 +121,9 @@ int visual_bin_switch_set_automatic (VisBin *bin, int automatic);
 int visual_bin_switch_set_rate (VisBin *bin, float rate);
 int visual_bin_switch_set_mode (VisBin *bin, VisMorphMode mode);
 int visual_bin_switch_set_time (VisBin *bin, long sec, long usec);
-	
+
 int visual_bin_run (VisBin *bin);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+VISUAL_END_DECLS
 
 #endif /* _LV_BIN_H */

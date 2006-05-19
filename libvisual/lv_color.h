@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_color.h,v 1.17 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -26,11 +26,9 @@
 
 #include <libvisual/lv_common.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+VISUAL_BEGIN_DECLS
 
-#define VISUAL_COLOR(obj)				(VISUAL_CHECK_CAST ((obj), 0, VisColor))
+#define VISUAL_COLOR(obj)				(VISUAL_CHECK_CAST ((obj), VisColor))
 
 typedef struct _VisColor VisColor;
 
@@ -47,13 +45,20 @@ struct _VisColor {
 };
 
 VisColor *visual_color_new (void);
+int visual_color_set (VisColor *color, uint8_t r, uint8_t g, uint8_t b);
 int visual_color_compare (VisColor *src1, VisColor *src2);
 int visual_color_from_hsv (VisColor *color, float h, float s, float v);
 int visual_color_to_hsv (VisColor *color, float *h, float *s, float *v);
 int visual_color_copy (VisColor *dest, VisColor *src);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+int visual_color_from_uint32 (VisColor *color, uint32_t rgb);
+int visual_color_from_uint16 (VisColor *color, uint16_t rgb);
+uint32_t visual_color_to_uint32 (VisColor *color);
+uint16_t visual_color_to_uint16 (VisColor *color);
+
+VisColor *visual_color_black (void);
+VisColor *visual_color_white (void);
+
+VISUAL_END_DECLS
 
 #endif /* _LV_COLOR_H */

@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_param.h,v 1.32 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -30,21 +30,20 @@
 #include <libvisual/lv_list.h>
 #include <libvisual/lv_event.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+VISUAL_BEGIN_DECLS
 
-#define VISUAL_PARAMCONTAINER(obj)			(VISUAL_CHECK_CAST ((obj), 0, VisParamContainer))
-#define VISUAL_PARAMENTRY_CALLBACK(obj)			(VISUAL_CHECK_CAST ((obj), 0, VisParamEntryCallback))
-#define VISUAL_PARAMENTRY(obj)				(VISUAL_CHECK_CAST ((obj), 0, VisParamEntry))
+#define VISUAL_PARAMCONTAINER(obj)			(VISUAL_CHECK_CAST ((obj), VisParamContainer))
+#define VISUAL_PARAMENTRY_CALLBACK(obj)			(VISUAL_CHECK_CAST ((obj), VisParamEntryCallback))
+#define VISUAL_PARAMENTRY(obj)				(VISUAL_CHECK_CAST ((obj), VisParamEntry))
 
-#define VISUAL_PARAM_LIST_ENTRY(name)			{ {}, NULL, name, VISUAL_PARAM_ENTRY_TYPE_NULL }
-#define VISUAL_PARAM_LIST_ENTRY_STRING(name, string)	{ {}, NULL, name, VISUAL_PARAM_ENTRY_TYPE_STRING, string, {0, 0, 0}}
-#define VISUAL_PARAM_LIST_ENTRY_INTEGER(name, val)	{ {}, NULL, name, VISUAL_PARAM_ENTRY_TYPE_INTEGER, NULL, {val, 0, 0}}
-#define VISUAL_PARAM_LIST_ENTRY_FLOAT(name, val)	{ {}, NULL, name, VISUAL_PARAM_ENTRY_TYPE_FLOAT, NULL, {0, val, 0}}
-#define VISUAL_PARAM_LIST_ENTRY_DOUBLE(name, val)	{ {}, NULL, name, VISUAL_PARAM_ENTRY_TYPE_DOUBLE, NULL, {0, 0, val}}
-#define VISUAL_PARAM_LIST_ENTRY_COLOR(name, r, g, b)	{ {}, NULL, name, VISUAL_PARAM_ENTRY_TYPE_COLOR, NULL, {0, 0, 0}, {{}, r, g, b, 0}}
-#define VISUAL_PARAM_LIST_END				{ {}, NULL, NULL, VISUAL_PARAM_ENTRY_TYPE_END }
+/* Use 0 for pointers instead of NULL because of C++ programs shocking on ((void *) 0) */
+#define VISUAL_PARAM_LIST_ENTRY(name)			{ {}, 0, name, VISUAL_PARAM_ENTRY_TYPE_NULL }
+#define VISUAL_PARAM_LIST_ENTRY_STRING(name, string)	{ {}, 0, name, VISUAL_PARAM_ENTRY_TYPE_STRING, string, {0, 0, 0}}
+#define VISUAL_PARAM_LIST_ENTRY_INTEGER(name, val)	{ {}, 0, name, VISUAL_PARAM_ENTRY_TYPE_INTEGER, 0, {val, 0, 0}}
+#define VISUAL_PARAM_LIST_ENTRY_FLOAT(name, val)	{ {}, 0, name, VISUAL_PARAM_ENTRY_TYPE_FLOAT, 0, {0, val, 0}}
+#define VISUAL_PARAM_LIST_ENTRY_DOUBLE(name, val)	{ {}, 0, name, VISUAL_PARAM_ENTRY_TYPE_DOUBLE, 0, {0, 0, val}}
+#define VISUAL_PARAM_LIST_ENTRY_COLOR(name, r, g, b)	{ {}, 0, name, VISUAL_PARAM_ENTRY_TYPE_COLOR, 0, {0, 0, 0}, {{}, r, g, b, 0}}
+#define VISUAL_PARAM_LIST_END				{ {}, 0, 0, VISUAL_PARAM_ENTRY_TYPE_END }
 
 #define VISUAL_PARAM_CALLBACK_ID_MAX	2147483647
 
@@ -94,7 +93,7 @@ struct _VisParamContainer {
  * A parameter callback entry, used for change notification callbacks.
  */
 struct _VisParamEntryCallback {
-	VisObject		 	 object;	/**< The VisObject data. */
+	VisObject			 object;	/**< The VisObject data. */
 	int				 id;		/**< Callback ID. */
 	VisParamChangedCallbackFunc	 callback;	/**< The param change callback function. */
 };
@@ -167,8 +166,6 @@ VisColor *visual_param_entry_get_color (VisParamEntry *param);
 VisPalette *visual_param_entry_get_palette (VisParamEntry *param);
 VisObject *visual_param_entry_get_object (VisParamEntry *param);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+VISUAL_END_DECLS
 
 #endif /* _LV_PARAM_H */

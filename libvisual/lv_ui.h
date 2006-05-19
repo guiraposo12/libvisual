@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_ui.h,v 1.42 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -29,41 +29,43 @@
 #include <libvisual/lv_video.h>
 #include <libvisual/lv_common.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+VISUAL_BEGIN_DECLS
 
-#define VISUAL_UI_WIDGET(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_WIDGET, VisUIWidget))
-#define VISUAL_UI_CONTAINER(obj)			(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_CONTAINER, VisUIContainer))
-#define VISUAL_UI_BOX(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_BOX, VisUIBox))
-#define VISUAL_UI_TABLE_ENTRY(obj)			(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_TABLE, VisUITableEntry))
-#define VISUAL_UI_TABLE(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_TABLE, VisUITable))
-#define VISUAL_UI_FRAME(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_FRAME, VisUIFrame))
-#define VISUAL_UI_LABEL(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_LABEL, VisUILabel))
-#define VISUAL_UI_IMAGE(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_IMAGE, VisUIImage))
-#define VISUAL_UI_SEPARATOR(obj)			(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_SEPARATOR, VisUISeparator))
-#define VISUAL_UI_MUTATOR(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_MUTATOR, VisUIMutator))
-#define VISUAL_UI_RANGE(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_RANGE, VisUIRange))
-#define VISUAL_UI_ENTRY(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_ENTRY, VisUIEntry))
-#define VISUAL_UI_SLIDER(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_SLIDER, VisUISlider))
-#define VISUAL_UI_NUMERIC(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_NUMERIC, VisUINumeric))
-#define VISUAL_UI_COLOR(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_COLOR, VisUIColor))
-#define VISUAL_UI_CHOICE_ENTRY(obj)			(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_CHOICE, VisUIChoiceEntry))
-#define VISUAL_UI_CHOICE(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_CHOICE, VisUIChoice))
-#define VISUAL_UI_POPUP(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_POPUP, VisUIPopup))
-#define VISUAL_UI_LIST(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_LIST, VisUIList))
-#define VISUAL_UI_RADIO(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_RADIO, VisUIRadio))
-#define VISUAL_UI_CHECKBOX(obj)				(VISUAL_CHECK_CAST ((obj), VISUAL_WIDGET_TYPE_CHECKBOX, VisUICheckbox))
+#define VISUAL_UI_WIDGET(obj)				(VISUAL_CHECK_CAST ((obj), VisUIWidget))
+#define VISUAL_UI_CONTAINER(obj)			(VISUAL_CHECK_CAST ((obj), VisUIContainer))
+#define VISUAL_UI_BOX(obj)				(VISUAL_CHECK_CAST ((obj), VisUIBox))
+#define VISUAL_UI_TABLE_ENTRY(obj)			(VISUAL_CHECK_CAST ((obj), VisUITableEntry))
+#define VISUAL_UI_TABLE(obj)				(VISUAL_CHECK_CAST ((obj), VisUITable))
+#define VISUAL_UI_NOTEBOOK(obj)				(VISUAL_CHECK_CAST ((obj), VisUINotebook))
+#define VISUAL_UI_FRAME(obj)				(VISUAL_CHECK_CAST ((obj), VisUIFrame))
+#define VISUAL_UI_LABEL(obj)				(VISUAL_CHECK_CAST ((obj), VisUILabel))
+#define VISUAL_UI_IMAGE(obj)				(VISUAL_CHECK_CAST ((obj), VisUIImage))
+#define VISUAL_UI_SEPARATOR(obj)			(VISUAL_CHECK_CAST ((obj), VisUISeparator))
+#define VISUAL_UI_MUTATOR(obj)				(VISUAL_CHECK_CAST ((obj), VisUIMutator))
+#define VISUAL_UI_RANGE(obj)				(VISUAL_CHECK_CAST ((obj), VisUIRange))
+#define VISUAL_UI_ENTRY(obj)				(VISUAL_CHECK_CAST ((obj), VisUIEntry))
+#define VISUAL_UI_SLIDER(obj)				(VISUAL_CHECK_CAST ((obj), VisUISlider))
+#define VISUAL_UI_NUMERIC(obj)				(VISUAL_CHECK_CAST ((obj), VisUINumeric))
+#define VISUAL_UI_COLOR(obj)				(VISUAL_CHECK_CAST ((obj), VisUIColor))
+#define VISUAL_UI_COLORBUTTON(obj)			(VISUAL_CHECK_CAST ((obj), VisUIColorButton))
+#define VISUAL_UI_COLORPALETTE(obj)			(VISUAL_CHECK_CAST ((obj), VisUIColorPalette))
+#define VISUAL_UI_CHOICE_ENTRY(obj)			(VISUAL_CHECK_CAST ((obj), VisUIChoiceEntry))
+#define VISUAL_UI_CHOICE(obj)				(VISUAL_CHECK_CAST ((obj), VisUIChoice))
+#define VISUAL_UI_POPUP(obj)				(VISUAL_CHECK_CAST ((obj), VisUIPopup))
+#define VISUAL_UI_LIST(obj)				(VISUAL_CHECK_CAST ((obj), VisUIList))
+#define VISUAL_UI_RADIO(obj)				(VISUAL_CHECK_CAST ((obj), VisUIRadio))
+#define VISUAL_UI_CHECKBOX(obj)				(VISUAL_CHECK_CAST ((obj), VisUICheckbox))
 
 /**
  * Enumerate to define the different types of VisUIWidgets.
  */
 typedef enum {
-	VISUAL_WIDGET_TYPE_NULL,	/**< NULL widget */
+	VISUAL_WIDGET_TYPE_NULL = 0,	/**< NULL widget */
 	VISUAL_WIDGET_TYPE_WIDGET,	/**< Base widget: \a VisUIWidget. */
 	VISUAL_WIDGET_TYPE_CONTAINER,	/**< Container widget: \a VisUIContainer. */
 	VISUAL_WIDGET_TYPE_BOX,		/**< Box widget: \a VisUIBox. */
 	VISUAL_WIDGET_TYPE_TABLE,	/**< Table widget: \a VisUITable. */
+	VISUAL_WIDGET_TYPE_NOTEBOOK,	/**< Notebook widget: \a VisUINotebook. */
 	VISUAL_WIDGET_TYPE_FRAME,	/**< Frame widget: \a VisUIFrame. */
 	VISUAL_WIDGET_TYPE_LABEL,	/**< Label widget: \a VisUILabel. */
 	VISUAL_WIDGET_TYPE_IMAGE,	/**< Image widget: \a VisUIImage. */
@@ -74,6 +76,8 @@ typedef enum {
 	VISUAL_WIDGET_TYPE_SLIDER,	/**< Slider widget: \a VisUISlider. */
 	VISUAL_WIDGET_TYPE_NUMERIC,	/**< Numeric widget: \a VisUINumeric. */
 	VISUAL_WIDGET_TYPE_COLOR,	/**< Color widget: \a VisUIColor. */
+	VISUAL_WIDGET_TYPE_COLORBUTTON,	/**< Color button widget: \a VisUIColorButton. */
+	VISUAL_WIDGET_TYPE_COLORPALETTE,/**< Color palette widget: \a VisUIColorPalette. */
 	VISUAL_WIDGET_TYPE_CHOICE,	/**< Choice base widget: \a VisUIChoice. */
 	VISUAL_WIDGET_TYPE_POPUP,	/**< Popup widget: \a VisUIPopup. */
 	VISUAL_WIDGET_TYPE_LIST,	/**< List widget: \a VisUIList. */
@@ -96,6 +100,7 @@ typedef struct _VisUIContainer VisUIContainer;
 typedef struct _VisUIBox VisUIBox;
 typedef struct _VisUITableEntry VisUITableEntry;
 typedef struct _VisUITable VisUITable;
+typedef struct _VisUINotebook VisUINotebook;
 typedef struct _VisUIFrame VisUIFrame;
 typedef struct _VisUILabel VisUILabel;
 typedef struct _VisUIImage VisUIImage;
@@ -106,6 +111,8 @@ typedef struct _VisUIEntry VisUIEntry;
 typedef struct _VisUISlider VisUISlider;
 typedef struct _VisUINumeric VisUINumeric;
 typedef struct _VisUIColor VisUIColor;
+typedef struct _VisUIColorButton VisUIColorButton;
+typedef struct _VisUIColorPalette VisUIColorPalette;
 typedef struct _VisUIChoiceList VisUIChoiceList;
 typedef struct _VisUIChoiceEntry VisUIChoiceEntry;
 typedef struct _VisUIChoice VisUIChoice;
@@ -130,10 +137,13 @@ typedef struct _VisUICheckbox VisUICheckbox;
  *	- \a VisUIContainer
  *		- \a VisUIBox
  *		- \a VisUITable
+ *		- \a VisUINotebook
  *		- \a VisUIFrame
  *	- \a VisUIMutator
  *		- \a VisUIText
  *		- \a VisUIColor
+ *		- \a VisUIColorButton
+ *		- \a VisUIColorPalette
  *		- \a VisUIRange
  *			- \a VisUISlider
  *			- \a VisUINumeric
@@ -211,6 +221,16 @@ struct _VisUITable {
 
 	VisList			 childs;	/**< A list of all VisUITableEntry items that are related to
 						 * this table. */
+};
+
+/**
+ * The VisUINotebook inherents from VisUIContainer, but is capable of placing VisUIWidgets in notebooks.
+ */
+struct _VisUINotebook {
+	VisUIContainer		 container;	/**< The VisUIContainer data. */
+
+	VisList			 labels;	/**< The labels as VisUILabels. */
+	VisList			 childs;	/**< The child VisUIWidgets per notebook. */
 };
 
 /**
@@ -320,6 +340,22 @@ struct _VisUIColor {
 };
 
 /**
+ * The VisUIColorButton inherents from a VisUIMutator, it's used to adjust the color that is encapsulated by
+ * a VisParamEntry. Unlike VisUIColor, it only shows a button, but when pressed you can change the color.
+ */
+struct _VisUIColorButton {
+	VisUIMutator		 mutator;	/**< The VisUIMutator data. */
+};
+
+/**
+ * The VisUIColorPalette inherents from a VisUIMutator, it's used to adjust a small color palette that is encapsulated by
+ * a VisParamEntry. It's not allowed to change the size of the palette after it's been set.
+ */
+struct _VisUIColorPalette {
+	VisUITable		 table;		/**< The VisUITable data. */
+};
+
+/**
  * The VisUIChoiceList is not a VisUIWidget, but it's used by the different types of VisUIChoice widgets to
  * store information about choices.
  */
@@ -414,6 +450,11 @@ VisUITableEntry *visual_ui_table_entry_new (VisUIWidget *widget, int row, int co
 int visual_ui_table_attach (VisUITable *table, VisUIWidget *widget, int row, int col);
 VisList *visual_ui_table_get_childs (VisUITable *table);
 
+VisUIWidget *visual_ui_notebook_new (void);
+int visual_ui_notebook_add (VisUINotebook *notebook, VisUIWidget *widget, char *label);
+VisList *visual_ui_notebook_get_childs (VisUINotebook *notebook);
+VisList *visual_ui_notebook_get_childlabels (VisUINotebook *notebook);
+
 VisUIWidget *visual_ui_frame_new (const char *name);
 
 VisUIWidget *visual_ui_label_new (const char *text, int bold);
@@ -446,6 +487,10 @@ VisUIWidget *visual_ui_numeric_new (void);
 
 VisUIWidget *visual_ui_color_new (void);
 
+VisUIWidget *visual_ui_colorbutton_new (void);
+
+VisUIWidget *visual_ui_colorpalette_new (void);
+
 VisUIChoiceEntry *visual_ui_choice_entry_new (const char *name, VisParamEntry *value);
 int visual_ui_choice_add (VisUIChoice *choice, const char *name, VisParamEntry *value);
 int visual_ui_choice_add_many (VisUIChoice *choice, VisParamEntry *paramchoices);
@@ -465,8 +510,6 @@ VisUIWidget *visual_ui_radio_new (VisUIOrientType orient);
 
 VisUIWidget *visual_ui_checkbox_new (const char *name, int boolcheck);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+VISUAL_END_DECLS
 
 #endif /* _LV_UI_H */

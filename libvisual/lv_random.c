@@ -1,11 +1,11 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  * 	    Vitaly V. Bursov <vitalyvb@ukr.net>
  *
- * $Id:
+ * $Id: lv_random.c,v 1.19 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -33,6 +33,7 @@
 #define val_a 1664525L		/* As suggested by Knuth */
 #define val_c 1013904223L	/* As suggested by H.W. Lewis and is a prime close to 2^32 * (sqrt(5) - 2)) */
 
+VisRandomContext __lv_internal_random_context;
 
 /**
  * @defgroup VisRandom VisRandom
@@ -52,12 +53,28 @@ VisRandomContext *visual_random_context_new (uint32_t seed)
 
 	rcontext = visual_mem_new0 (VisRandomContext, 1);
 
-	/* Do the VisObject initialization */
-	visual_object_initialize (VISUAL_OBJECT (rcontext), TRUE, NULL);
+	visual_random_context_init (rcontext, seed);
 
-	visual_random_context_set_seed (rcontext, seed);
+	/* Do the VisObject initialization */
+	visual_object_set_allocated (VISUAL_OBJECT (rcontext), TRUE);
+	visual_object_ref (VISUAL_OBJECT (rcontext));
 
 	return rcontext;
+}
+
+int visual_random_context_init (VisRandomContext *rcontext, uint32_t seed)
+{
+	visual_log_return_val_if_fail (rcontext != NULL, -VISUAL_ERROR_RANDOM_CONTEXT_NULL);
+
+	/* Do the VisObject initialization */
+	visual_object_clear (VISUAL_OBJECT (rcontext));
+	visual_object_set_dtor (VISUAL_OBJECT (rcontext), NULL);
+	visual_object_set_allocated (VISUAL_OBJECT (rcontext), FALSE);
+
+	/* Set the VisRandomContext data */
+	visual_random_context_set_seed (rcontext, seed);
+
+	return VISUAL_OK;
 }
 
 /**

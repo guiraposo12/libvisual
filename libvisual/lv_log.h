@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_log.h,v 1.19.2.1 2006/03/04 12:32:47 descender Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -29,9 +29,10 @@
 #include <stdarg.h>
 #include <assert.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+#include <libvisual/lv_defines.h>
+#include <libvisual/lvconfig.h>
+
+VISUAL_BEGIN_DECLS
 
 /* This is read-only */
 extern char *__lv_progname;
@@ -125,7 +126,7 @@ static void visual_log (VisLogSeverity severity, const char *fmt, ...)
 	va_list va;
 	char sever_msg[10];
 	VisLogVerboseness v;
-	
+
 	assert (fmt != NULL);
 
 	va_start (va, fmt);
@@ -208,7 +209,7 @@ static void visual_log (VisLogSeverity severity, const char *fmt, ...)
 	va_list va;
 	char sever_msg[10];
 	VisLogVerboseness v;
-	
+
 	assert (fmt != NULL);
 
 	va_start (va, fmt);
@@ -306,8 +307,6 @@ void _lv_log (VisLogSeverity severity, const char *file,
 		int line, const char *funcname, const char *fmt, ...);
 #endif
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+VISUAL_END_DECLS
 
 #endif /* _LV_LOG_H */

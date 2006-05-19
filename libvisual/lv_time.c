@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_time.c,v 1.29 2006/01/23 22:32:42 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -27,6 +27,12 @@
 #include <errno.h>
 #include <string.h>
 
+#include "lvconfig.h"
+
+#if defined(VISUAL_OS_WIN32)
+#include <windows.h>
+#endif
+
 #include "config.h"
 #include "lv_common.h"
 #include "lv_thread.h"
@@ -48,11 +54,42 @@ VisTime *visual_time_new ()
 
 	time_ = visual_mem_new0 (VisTime, 1);
 
+	visual_time_init (time_);
+
 	/* Do the VisObject initialization */
-	visual_object_initialize (VISUAL_OBJECT (time_), TRUE, NULL);
+	visual_object_set_allocated (VISUAL_OBJECT (time_), TRUE);
+	visual_object_ref (VISUAL_OBJECT (time_));
 
 	return time_;
 }
+
+/**
+ * Initializes a VisTime, this should not be used to reset a VisTime.
+ * The resulting initialized VisTime is a valid VisObject even if it was not allocated.
+ * Keep in mind that VisTime structures that were created by visual_time_new() should not
+ * be passed to visual_time_init().
+ *
+ * @see visual_time_new
+ *
+ * @param time_ Pointer to the VisTime which needs to be initialized.
+ * 
+ * @return VISUAL_OK on succes, -VISUAL_ERROR_TIME_NULL on failure.
+ */
+int visual_time_init (VisTime *time_)
+{
+	visual_log_return_val_if_fail (time_ != NULL, -VISUAL_ERROR_TIME_NULL);
+
+	/* Do the VisObject initialization */
+	visual_object_clear (VISUAL_OBJECT (time_));
+	visual_object_set_dtor (VISUAL_OBJECT (time_), NULL);
+	visual_object_set_allocated (VISUAL_OBJECT (time_), FALSE);
+
+	/* Reset the VisTime data */
+	visual_time_set	(time_, 0, 0);
+
+	return VISUAL_OK;
+}
+
 
 /**
  * Loads the current time into the VisTime structure.
@@ -63,14 +100,25 @@ VisTime *visual_time_new ()
  */
 int visual_time_get (VisTime *time_)
 {
+#if defined(VISUAL_OS_WIN32)
+	SYSTEMTIME systime;
+
+	visual_log_return_val_if_fail (time_ != NULL, -VISUAL_ERROR_TIME_NULL);
+
+	GetLocalTime (&systime);
+
+	visual_time_set (time_, (systime.wHour * 60 * 60) + (systime.wMinute * 60) + systime.wSecond,
+			systime.wMilliseconds * 1000);
+
+#else
 	struct timeval tv;
-	
+
 	visual_log_return_val_if_fail (time_ != NULL, -VISUAL_ERROR_TIME_NULL);
 
 	gettimeofday (&tv, NULL);
 
 	visual_time_set (time_, tv.tv_sec, tv.tv_usec);
-
+#endif
 	return VISUAL_OK;
 }
 
@@ -86,7 +134,7 @@ int visual_time_get (VisTime *time_)
 int visual_time_set (VisTime *time_, long sec, long usec)
 {
 	visual_log_return_val_if_fail (time_ != NULL, -VISUAL_ERROR_TIME_NULL);
-	
+
 	time_->tv_sec = sec;
 	time_->tv_usec = usec;
 
@@ -139,6 +187,28 @@ int visual_time_difference (VisTime *dest, VisTime *time1, VisTime *time2)
 }
 
 /**
+ * Checks if a VisTime is later than another VisTime.
+ *
+ * @param time_ Pointer to the VisTime for which is checked whether it's later or not than the other.
+ * @param past Pointer to the VisTime that acts as the past time source data.
+ *
+ * @return TRUE if past, FALSE if not on succes, -VISUAL_ERROR_TIME_NULL on failure.
+ */
+int visual_time_past (VisTime *time_, VisTime *past)
+{
+	visual_log_return_val_if_fail (time_ != NULL, -VISUAL_ERROR_TIME_NULL);
+	visual_log_return_val_if_fail (past != NULL, -VISUAL_ERROR_TIME_NULL);
+
+	if (time_->tv_sec > past->tv_sec)
+		return TRUE;
+
+	if (time_->tv_sec == past->tv_sec && time_->tv_usec > past->tv_usec)
+		return TRUE;
+
+	return FALSE;
+}
+
+/**
  * Sleeps an certain amount of microseconds.
  *
  * @param microseconds The amount of microseconds we're going to sleep. To sleep a certain amount of
@@ -148,6 +218,11 @@ int visual_time_difference (VisTime *dest, VisTime *time1, VisTime *time2)
  */
 int visual_time_usleep (unsigned long microseconds)
 {
+#if defined(VISUAL_OS_WIN32)
+	Sleep (microseconds / 1000);
+
+	return VISUAL_OK;
+#else /* !VISAUL_OS_WIN32 */
 #ifdef HAVE_NANOSLEEP
 	struct timespec request, remaining;
 	request.tv_sec = microseconds / VISUAL_USEC_PER_SEC;
@@ -162,10 +237,11 @@ int visual_time_usleep (unsigned long microseconds)
 #elif HAVE_USLEEP
 	return usleep (microseconds);
 #else
-#warning visual_time_usleep() will does not work!
+#warning visual_time_usleep() will not work!
 	return -VISUAL_ERROR_TIME_NO_USLEEP;
 #endif
 	return VISUAL_OK;
+#endif /* !VISUAL_OS_WIN32 */
 }
 
 /**
@@ -179,10 +255,62 @@ VisTimer *visual_timer_new ()
 
 	timer = visual_mem_new0 (VisTimer, 1);
 
+	visual_timer_init (timer);
+
 	/* Do the VisObject initialization */
-	visual_object_initialize (VISUAL_OBJECT (timer), TRUE, NULL);
+	visual_object_set_allocated (VISUAL_OBJECT (timer), TRUE);
+	visual_object_ref (VISUAL_OBJECT (timer));
 
 	return timer;
+}
+
+/**
+ * Initializes a VisTimer, this should not be used to reset a VisTimer.
+ * The resulting initialized VisTimer is a valid VisObject even if it was not allocated with visual_timer_new().
+ * Keep in mind that VisTimer structures that were created by visual_timer_new() should not
+ * be passed to visual_timer_init().
+ *
+ * @see visual_timer_new
+ *
+ * @param timer Pointer to the VisTimer which needs to be initialized.
+ *
+ * @return VISUAL_OK on succes, -VISUAL_ERROR_TIMER_NULL on failure.
+ */
+int visual_timer_init (VisTimer *timer)
+{
+	visual_log_return_val_if_fail (timer != NULL, -VISUAL_ERROR_TIMER_NULL);
+
+	/* Do the VisObject initialization */
+	visual_object_clear (VISUAL_OBJECT (timer));
+	visual_object_set_dtor (VISUAL_OBJECT (timer), NULL);
+	visual_object_set_allocated (VISUAL_OBJECT (timer), FALSE);
+
+	/* Reset the VisTime data */
+	visual_time_init (&timer->start);
+	visual_time_init (&timer->stop);
+
+	visual_timer_reset (timer);
+
+	return VISUAL_OK;
+}
+
+/**
+ * Resets a VisTimer.
+ *
+ * @param timer Pointer to the VisTimer that is to be reset.
+ *
+ * @return VISUAL_OK on succes, -VISUAL_ERROR_TIMER_NULL on failure.
+ */
+int visual_timer_reset (VisTimer *timer)
+{
+	visual_log_return_val_if_fail (timer != NULL, -VISUAL_ERROR_TIMER_NULL);
+
+	visual_time_set (&timer->start, 0, 0);
+	visual_time_set (&timer->stop, 0, 0);
+
+	timer->active = FALSE;
+
+	return VISUAL_OK;
 }
 
 /**
@@ -205,7 +333,7 @@ int visual_timer_is_active (VisTimer *timer)
  * @param timer Pointer to the VisTimer in which we start the timer.
  *
  * return VISUAL_OK on succes, -VISUAL_ERROR_TIMER_NULL on failure.
- */ 
+ */
 int visual_timer_start (VisTimer *timer)
 {
 	visual_log_return_val_if_fail (timer != NULL, -VISUAL_ERROR_TIMER_NULL);
@@ -294,11 +422,13 @@ int visual_timer_elapsed (VisTimer *timer, VisTime *time_)
 
 /**
  * Returns the amount of milliseconds passed since the timer has started.
- * Be aware to not confuse milliseconds with microseconds.
+ * Be careful not to confuse milliseconds with microseconds.
+ *
+ * @see visual_timer_elapsed_usecs
  *
  * @param timer Pointer to the VisTimer from which we want to know the amount of milliseconds passed since activation.
  *
- * @return The amount of milliseconds passed, or -1 on error, this function is not clockscrew safe.
+ * @return The amount of milliseconds passed, or -1 on error, this function will fail if your system goes back in time.
  */
 int visual_timer_elapsed_msecs (VisTimer *timer)
 {
@@ -308,7 +438,28 @@ int visual_timer_elapsed_msecs (VisTimer *timer)
 
 	visual_timer_elapsed (timer, &cur);
 
-	return (cur.tv_sec * 1000) + (cur.tv_usec / 1000);
+	return (cur.tv_sec * VISUAL_MSEC_PER_SEC) + (cur.tv_usec / VISUAL_MSEC_PER_SEC);
+}
+
+/**
+ * Returns the amount of microseconds passed since the timer has started.
+ * Be careful not to confuse milliseconds with microseconds.
+ *
+ * @see visual_timer_elapsed_msecs
+ *
+ * @param timer Pointer to the VisTimer from which we want to know the amount of microseconds passed since activation.
+ *
+ * @return The amount of microseconds passed, or -1 on error, this function will fail if your system goes back in time.
+ */
+int visual_timer_elapsed_usecs (VisTimer *timer)
+{
+	VisTime cur;
+
+	visual_log_return_val_if_fail (timer != NULL, -1);
+
+	visual_timer_elapsed (timer, &cur);
+
+	return (cur.tv_sec * VISUAL_USEC_PER_SEC) + cur.tv_usec;
 }
 
 /**
