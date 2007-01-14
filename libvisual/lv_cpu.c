@@ -143,6 +143,7 @@ static void sigill_handler (int sig)
 
 static void check_os_altivec_support( void )
 {
+  return;
 #if defined(VISUAL_OS_DARWIN)
 	int sels[2] = {CTL_HW, HW_VECTORUNIT};
 	int has_vu = 0;
