@@ -1,3 +1,11 @@
+libvisual (0.4.0-2.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * libvisual/lv_cpu.c: remove X86_FXSR_MAGIC guard (not defined anywhere).
+    (Closes: #456856).
+
+ -- Pierre Habouzit <madcoder@debian.org>  Sun, 16 Mar 2008 14:49:11 +0100
+
 libvisual (0.4.0-2) unstable; urgency=low
 
   * NMU ACK. Thanks
