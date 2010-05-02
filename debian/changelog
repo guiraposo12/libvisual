@@ -1,3 +1,14 @@
+libvisual (0.4.0-3) unstable; urgency=low
+
+  * Acknowledge NMU for lv_cpu.c fix. Thanks
+  * Fixed Maintainer field email address
+  * Updated Packaging to source 3.0 (quilt) format and 
+    Moved direct source edits from NMU to patches.
+  * Added patch from Ubuntu for inline redefine fix.
+  * Very old config.sub and config.guess replaced
+
+ -- Brandon Holtsclaw <me@brandonholtsclaw.com>  Sun, 02 May 2010 05:19:31 -0500
+
 libvisual (0.4.0-2.1) unstable; urgency=low
 
   * Non-maintainer upload.
