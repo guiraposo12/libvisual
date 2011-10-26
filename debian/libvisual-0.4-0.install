@@ -1,2 +1,2 @@
-debian/tmp/usr/lib/lib*.so.*
-debian/tmp/usr/share/locale/*
+usr/lib/*/lib*.so.*
+usr/share/locale/*

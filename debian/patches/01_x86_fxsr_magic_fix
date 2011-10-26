@@ -1,5 +1,7 @@
---- ../libvisual/lv_cpu.c	2006-01-22 07:23:37.000000000 -0600
-+++ libvisual/lv_cpu.c	2010-05-02 04:45:42.000000000 -0500
+Index: b/libvisual/lv_cpu.c
+===================================================================
+--- a/libvisual/lv_cpu.c
++++ b/libvisual/lv_cpu.c
 @@ -76,7 +76,7 @@
  
  /* The sigill handlers */
