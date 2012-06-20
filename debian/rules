@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 
+export GETTEXT_PACKAGE=libvisual-0.4
+
 %:
 	dh $@ --with autoreconf
 

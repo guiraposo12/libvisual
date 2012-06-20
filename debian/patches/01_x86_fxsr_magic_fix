@@ -1,3 +1,5 @@
+Description: Fix for X86_FXSR_MAGIC
+
 Index: b/libvisual/lv_cpu.c
 ===================================================================
 --- a/libvisual/lv_cpu.c

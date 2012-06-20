@@ -1,3 +1,21 @@
+libvisual (0.4.0-5) unstable; urgency=low
+
+  * QA upload.
+  * Added debian/watch.
+  * Updated debian/control:
+    - added homepage field
+    - fixed lintian warning package-needs-versioned-debhelper-build-depends 9
+  * Updated debian/rules:
+    fixed broken names of translation files. (Closes: #646964)
+  * Added file debian/patches/fix-spelling-errors.
+  * Updated files debian/patches/0*_fix:
+    fixed lintian notes quilt-patch-missing-description.
+  * Updated debian/copyright:
+    file was rewritten in according to Copyright format 1.0.
+  * Bumped Standards-Version to 3.9.3.
+
+ -- Boris Pek <tehnick-8@mail.ru>  Wed, 20 Jun 2012 22:42:45 +0300
+
 libvisual (0.4.0-4) unstable; urgency=low
 
   * QA upload, orphaning package; see #646655.

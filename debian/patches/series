@@ -2,3 +2,4 @@
 02_redefine_fix
 03_configure_fix
 Werror=format-security-fix
+fix-spelling-errors

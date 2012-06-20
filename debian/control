@@ -2,13 +2,16 @@ Source: libvisual
 Section: devel
 Priority: optional
 Maintainer: Debian QA Group <packages@qa.debian.org>
-Build-Depends: debhelper (>= 8.9.4~), dh-autoreconf, autopoint, pkg-config
-Standards-Version: 3.9.2
+Build-Depends: debhelper (>= 9), dh-autoreconf, autopoint, pkg-config
+Homepage: http://sourceforge.net/projects/libvisual/
+Standards-Version: 3.9.3
 
 Package: libvisual-0.4-dev
 Section: libdevel
 Architecture: any
-Depends: ${misc:Depends}, libvisual-0.4-0 (= ${binary:Version}), pkg-config, libc6-dev | libc-dev
+Depends: ${misc:Depends},
+ libvisual-0.4-0 (= ${binary:Version}),
+ pkg-config, libc6-dev | libc-dev
 Replaces: libvisual0.2-dev
 Description: Audio visualization framework (development package)
  Libvisual is a generic visualization framework that allows
@@ -44,4 +47,3 @@ Description: Audio visualization framework
  This package contains the runtime libraries for libvisual.  Libvisual
  is not very useful without visualization plugins, so it is highly
  recommended to install the libvisual-0.4-plugins package.
-
