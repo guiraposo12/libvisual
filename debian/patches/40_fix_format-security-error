@@ -1,10 +1,10 @@
-Author: Steve Langasek <vorlon@debian.org>
-Description: Fixes for -Werror=format-security
+Description: fixes for -Werror=format-security.
  Source fails to build with -Werror=format-security because a function return
  value is being passed to the visual_log() function where a format string is
  expected.  This isn't a security hole because the strings returned aren't
  based on untrusted input, but we should clean up anyway.
-
+Author: Steve Langasek <vorlon@debian.org>
+Last-Update: 2011-10-26
 Index: debian/libvisual/lv_plugin.c
 ===================================================================
 --- debian.orig/libvisual/lv_plugin.c

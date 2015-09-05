@@ -1,6 +1,7 @@
-99_add_german_translation.patch
-01_x86_fxsr_magic_fix
-02_redefine_fix
-03_configure_fix
-Werror=format-security-fix
-fix-spelling-errors
+10_fix_x86_fxsr_magic
+20_redefine_fix
+30_configure_fix
+40_fix_format-security-error
+50_fix-spelling-errors
+60_add_german_translation
+70_fix_some_GCC_warnings

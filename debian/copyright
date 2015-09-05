@@ -1,26 +1,41 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Debianized-By: David Schleef <ds@schleef.org>
-Debianized-Date: Wed, 22 Jun 2005 16:07:50 -0700
 Upstream-Name: Libvisual
-Upstream-Contact: Dennis Smit <synap@users.sourceforge.net>
-Source: http://sourceforge.net/projects/libvisual/files/
+Upstream-Contact: Dennis Smit <synap@users.sf.net>
+Source: http://sf.net/projects/libvisual
 Comment: see also: https://github.com/Libvisual/libvisual
 
-
 Files: *
-Copyright: 2004-2006 Dennis Smit <ds@nerds-incorporated.org>
+Copyright: 2002-2004 Sepp Wijnands <mrrazz@nerds-incorporated.org, sw@nerds-incorporated.org>
+           2002-2004 Tom Wimmenhove <nohup@nerds-incorporated.org>
+           2002-2006 Dennis Smit <ds@nerds-incorporated.org>
+           ?         Chong Kai Xiong <descender@phreaker.net>
+           ?         Duilio J. Protti <dprotti@users.sourceforge.net>
+           ?         Eric Anholt <anholt@FreeBSD.org>
+           ?         Jaak Randmets <jaak.ra@gmail.com>
+           ?         Jean-Christophe Hoelt <jeko@ios-software.com>
+           ?         Vitaly V. Bursov <vitalyvb@ukr.net>
 License: LGPL-2.1+
 
 Files: libvisual/gettext.h
 Copyright: 1995-2002 Free Software Foundation, Inc
 License: LGPL-2+
 
-Files: debian/*
-Copyright: 2005-2006 David Schleef <ds@schleef.org>
- 2012 Boris Pek <tehnick-8@mail.ru>
+Files: po/*
+Copyright: 2005 ? <dprotti@users.sourceforge.net>
 License: LGPL-2.1+
 
-Files: debian/patches/add_german_translation.patch
+Files: debian/*
+Copyright: 2005-2006 David Schleef <ds@schleef.org>
+           2007      Sjoerd Simons <sjoerd@debian.org>
+           2007-2010 Brandon Holtsclaw <brandon@imbrandon.com>
+           2008      Pierre Habouzit <madcoder@debian.org>
+           2011      Steve Langasek <vorlon@debian.org>
+           2012      Boris Pek <tehnick-8@mail.ru>
+           2014      Helge Kreutzmann <debian@helgefjell.de>
+           2015      Joao Eriberto Mota Filho <eriberto@debian.org>
+License: LGPL-2.1+
+
+Files: debian/patches/60_add_german_translation
 Copyright: 2008 Chris Leick <c.leick@vollbio.de>
 License: LGPL-2.1+
 

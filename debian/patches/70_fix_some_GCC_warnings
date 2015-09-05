@@ -1,0 +1,100 @@
+Description: fix some GCC warnings.
+Author: Joao Eriberto Mota Filho <eriberto@debian.org>
+Last-Update: 2015-08-06
+Index: libvisual-0.4.0/libvisual/lv_math.c
+===================================================================
+--- libvisual-0.4.0.orig/libvisual/lv_math.c
++++ libvisual-0.4.0/libvisual/lv_math.c
+@@ -31,6 +31,9 @@
+ #include "lv_bits.h"
+ #include "lv_math.h"
+ 
++// [FIX] lv_math.c:66:6: warning: implicit declaration of function 'visual_cpu_get_sse' [-Wimplicit-function-declaration]
++#include "lv_cpu.h"
++
+ /* This file is getting big and bloated because of the large chunks of simd code. When all is in place we'll take a serious
+  * look how we can reduce this. For example by using macros for common blocks. */
+ 
+Index: libvisual-0.4.0/libvisual/lv_bmp.c
+===================================================================
+--- libvisual-0.4.0.orig/libvisual/lv_bmp.c
++++ libvisual-0.4.0/libvisual/lv_bmp.c
+@@ -282,7 +282,8 @@ int visual_bitmap_load (VisVideo *video,
+ 	}
+ 
+ 	/* Read the magic string */
+-	fread (magic, 2, 1, fp);
++	// [FIX SEVERAL] warning: ignoring return value of 'something', declared with attribute warn_unused_result [-Wunused-result]
++	if (fread (magic, 2, 1, fp)){};
+ 	if (strncmp (magic, "BM", 2) != 0) {
+ 		visual_log (VISUAL_LOG_WARNING, _("Not a bitmap file")); 
+ 		fclose (fp);
+@@ -290,24 +291,24 @@ int visual_bitmap_load (VisVideo *video,
+ 	}
+ 
+ 	/* Read the file size */
+-	fread (&bf_size, 4, 1, fp);
++	if (fread (&bf_size, 4, 1, fp)){};
+ 	bf_size = VISUAL_ENDIAN_LEI32 (bf_size);
+ 
+ 	/* Skip past the reserved bits */
+ 	fseek (fp, 4, SEEK_CUR);
+ 
+ 	/* Read the offset bits */
+-	fread (&bf_bits, 4, 1, fp);
++	if (fread (&bf_bits, 4, 1, fp)){};
+ 	bf_bits = VISUAL_ENDIAN_LEI32 (bf_bits);
+ 
+ 	/* Read the info structure size */
+-	fread (&bi_size, 4, 1, fp);
++	if (fread (&bi_size, 4, 1, fp)){};
+ 	bi_size = VISUAL_ENDIAN_LEI32 (bi_size);
+ 
+ 	if (bi_size == 12) {
+ 		/* And read the width, height */
+-		fread (&bi_width, 2, 1, fp);
+-		fread (&bi_height, 2, 1, fp);
++		if (fread (&bi_width, 2, 1, fp)){};
++		if (fread (&bi_height, 2, 1, fp)){};
+ 		bi_width = VISUAL_ENDIAN_LEI16 (bi_width);
+ 		bi_height = VISUAL_ENDIAN_LEI16 (bi_height);
+ 
+@@ -315,13 +316,13 @@ int visual_bitmap_load (VisVideo *video,
+ 		fseek (fp, 2, SEEK_CUR);
+ 
+ 		/* Read the bits per pixel */
+-		fread (&bi_bitcount, 2, 1, fp);
++		if (fread (&bi_bitcount, 2, 1, fp)){};
+ 		bi_bitcount = VISUAL_ENDIAN_LEI16 (bi_bitcount);
+ 		bi_compression = BI_RGB;
+ 	} else {
+ 		/* And read the width, height */
+-		fread (&bi_width, 4, 1, fp);
+-		fread (&bi_height, 4, 1, fp);
++		if (fread (&bi_width, 4, 1, fp)){};
++		if (fread (&bi_height, 4, 1, fp)){};
+ 		bi_width = VISUAL_ENDIAN_LEI32 (bi_width);
+ 		bi_height = VISUAL_ENDIAN_LEI32 (bi_height);
+ 
+@@ -329,18 +330,18 @@ int visual_bitmap_load (VisVideo *video,
+ 		fseek (fp, 2, SEEK_CUR);
+ 
+ 		/* Read the bits per pixel */
+-		fread (&bi_bitcount, 2, 1, fp);
++		if (fread (&bi_bitcount, 2, 1, fp)){};
+ 		bi_bitcount = VISUAL_ENDIAN_LEI16 (bi_bitcount);
+ 
+ 		/* Read the compression flag */
+-		fread (&bi_compression, 4, 1, fp);
++		if (fread (&bi_compression, 4, 1, fp)){};
+ 		bi_compression = VISUAL_ENDIAN_LEI32 (bi_compression);
+ 
+ 		/* Skip over the nonsense we don't want to know */
+ 		fseek (fp, 12, SEEK_CUR);
+ 
+ 		/* Number of colors in palette */
+-		fread (&bi_clrused, 4, 1, fp);
++		if (fread (&bi_clrused, 4, 1, fp)){};
+ 		bi_clrused = VISUAL_ENDIAN_LEI32 (bi_clrused);
+ 
+ 		/* Skip over the other nonsense */

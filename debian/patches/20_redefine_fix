@@ -1,5 +1,6 @@
-Description: Fixes redefine
-
+Description: fix redefine.
+Author: Brandon Holtsclaw <me@brandonholtsclaw.com>
+Last-Update: 2010-05-02
 --- ../libvisual/lv_defines.h	2006-01-22 07:23:37.000000000 -0600
 +++ libvisual/lv_defines.h	2010-05-02 05:33:44.000000000 -0500
 @@ -63,7 +63,6 @@

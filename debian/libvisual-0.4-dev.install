@@ -1,5 +1,4 @@
-usr/include/*
-usr/lib/*/lib*.a
-usr/lib/*/lib*.so
-usr/lib/*/pkgconfig/*.pc
-
+usr/include
+usr/lib/*/libvisual-0.4.a
+usr/lib/*/libvisual-0.4.so
+usr/lib/*/pkgconfig/libvisual-0.4.pc

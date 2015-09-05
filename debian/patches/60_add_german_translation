@@ -1,6 +1,9 @@
+Description: add German translation. (Closes: #509208)
+Author: Chris Leick <c.leick@vollbio.de>
+Last-Update: 2008-12-19
 Index: libvisual-0.4.0.nmu/po/de.po
 ===================================================================
---- /dev/null
+--- libvisual-0.4.0.nmu.orig/po/de.po
 +++ libvisual-0.4.0.nmu/po/de.po
 @@ -0,0 +1,903 @@
 +# Translation of libvisual to German

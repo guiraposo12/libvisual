@@ -1,3 +1,39 @@
+libvisual (0.4.0-7) experimental; urgency=medium
+
+  * New maintainer. Thanks to all previous people that have helped this
+      package. (Closes: #646655)
+  * Created the symbols file. The debian/libvisual-0.4-0.shlibs file was
+      removed.
+  * debian/control:
+      - Added the Vcs-* fields.
+      - Bumped Standards-Version to 3.9.6.
+      - Changing the libvisual-0.4-plugins from Recommends to Suggests field
+        in libvisual-0.4-0 binary. (Closes: #768428)
+      - Rearranged the short and long descriptions.
+      - Removed the no longer needed Replaces field from libvisual-0.4-dev
+        binary.
+  * debian/copyright: updated all data.
+  * debian/patches/:
+      - Renamed all patches:
+          ~ 01_x86_fxsr_magic_fix to 10_fix_x86_fxsr_magic.
+          ~ 02_redefine_fix to 20_fix_redefine.
+          ~ 03_configure_fix to 30_fix_configure.
+          ~ Werror=format-security-fix to 40_fix_format_security_error.
+          ~ fix-spelling-errors to 50_fix-spelling-errors.
+          ~ 99_add_german_translation.patch to 60_add_german_translation.
+      - Updated all previous headers in all patches.
+      - Added the 70_fix_some_GCC_warnings patch to provide some fixes.
+  * debian/rules:
+      - Added DEB_BUILD_MAINT_OPTIONS variable to improve the GCC hardening.
+      - Added the override_dh_installdocs target to install some files in
+        all packages.
+  * debian/source/options: added to keep the de.gmo file, provided by
+      60_add_german_translation patch after the first build.
+  * debian/watch: improved.
+  * Reviewed the *.install files.
+
+ -- Joao Eriberto Mota Filho <eriberto@debian.org>  Sat, 05 Sep 2015 14:54:09 -0300
+
 libvisual (0.4.0-6) unstable; urgency=medium
 
   * QA upload.

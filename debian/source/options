@@ -1,0 +1,4 @@
+# The po/de.gmo file must be kept after the first build to allow a second
+# right build. The po/de.po is being provided by 60_add_german_translation
+# patch.
+extend-diff-ignore = "(^|/)po/de.gmo$"

@@ -1,5 +1,7 @@
-Description: Fix for X86_FXSR_MAGIC
-
+Description: fix for X86_FXSR_MAGIC. (Closes: #456856, #608784)
+Author: Pierre Habouzit <madcoder@debian.org>
+Reviewed-by: Steve Langasek <vorlon@debian.org>
+Last-Update: 2011-10-26
 Index: b/libvisual/lv_cpu.c
 ===================================================================
 --- a/libvisual/lv_cpu.c

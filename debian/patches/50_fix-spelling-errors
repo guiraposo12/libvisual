@@ -1,7 +1,6 @@
-Description: Fix spelling errors
+Description: fix spelling errors.
 Author: Boris Pek <tehnick-8@mail.ru>
 Last-Update: 2012-06-20
-
 --- a/libvisual/lv_error.c
 +++ b/libvisual/lv_error.c
 @@ -106,7 +106,7 @@

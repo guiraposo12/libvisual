@@ -1,3 +1,2 @@
 version=3
-http://sf.net/libvisual/libvisual-([\d+\.]+|\d+)\.tar\.gz \
-debian uupdate
+http://sf.net/libvisual/libvisual-(\d\S+)\.tar\.(?:bz2|gz|xz)
