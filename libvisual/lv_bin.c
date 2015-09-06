@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_bin.c,v 1.29 2006/02/08 18:55:12 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -21,10 +21,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#include <config.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <string.h>                                                                                            
+#include <string.h>
+#include <gettext.h>
 
 /*
  * lvconfig.h must be included in order to show correct log messages
@@ -121,7 +124,7 @@ VisBin *visual_bin_new ()
 
 	bin->morphmode = VISUAL_MORPH_MODE_TIME;
 	visual_time_set (&bin->morphtime, 4, 0);
-	
+
 	bin->depthpreferred = VISUAL_BIN_DEPTH_HIGHEST;
 
 	return bin;
@@ -329,7 +332,7 @@ int visual_bin_sync (VisBin *bin, int noevent)
 	}
 
 	/* Main actor */
-//	visual_actor_realize (bin->actor);
+/*	visual_actor_realize (bin->actor); */
 	visual_actor_set_video (bin->actor, video);
 
 	visual_log (VISUAL_LOG_DEBUG, "one last video pitch check %d depth old %d forcedmain %d noevent %d",
@@ -494,7 +497,7 @@ int visual_bin_switch_actor_by_name (VisBin *bin, char *actname)
 
 	depthflag = visual_actor_get_supported_depth (actor);
 	if (visual_video_depth_is_supported (depthflag, VISUAL_VIDEO_DEPTH_GL) == TRUE) {
-		visual_log (VISUAL_LOG_INFO, "Switching to Gl mode");
+		visual_log (VISUAL_LOG_INFO, _("Switching to Gl mode"));
 
 		bin->depthforced = VISUAL_VIDEO_DEPTH_GL;
 		bin->depthforcedmain = VISUAL_VIDEO_DEPTH_GL;
@@ -505,7 +508,7 @@ int visual_bin_switch_actor_by_name (VisBin *bin, char *actname)
 		bin->depthchanged = TRUE;
 
 	} else {
-		visual_log (VISUAL_LOG_INFO, "Switching away from Gl mode -- or non Gl switch");
+		visual_log (VISUAL_LOG_INFO, _("Switching away from Gl mode -- or non Gl switch"));
 
 		
 		/* Switching from GL */
@@ -518,7 +521,7 @@ int visual_bin_switch_actor_by_name (VisBin *bin, char *actname)
 		/* After a depth change, the pitch value needs an update from the client
 		 * if it's different from width * bpp, after a visual_bin_sync
 		 * the issues are fixed again */
-		visual_log (VISUAL_LOG_INFO, "video depth (from fixate): %d", video->depth);
+		visual_log (VISUAL_LOG_INFO, _("video depth (from fixate): %d"), video->depth);
 
 		/* FIXME check if there are any unneeded depth transform environments and drop these */
 		visual_log (VISUAL_LOG_DEBUG, "checking if we need to drop something: depthforcedmain: %d actvideo->depth %d",
@@ -534,7 +537,7 @@ int visual_bin_switch_actor_by_name (VisBin *bin, char *actname)
 				&& bin->actvideo->depth != VISUAL_VIDEO_DEPTH_GL
 				&& bin->morphstyle == VISUAL_SWITCH_STYLE_MORPH) {
 
-			visual_log (VISUAL_LOG_INFO, "old depth is higher, video depth %d, depth %d, bin depth %d", video->depth, depth,
+			visual_log (VISUAL_LOG_INFO, _("old depth is higher, video depth %d, depth %d, bin depth %d"), video->depth, depth,
 					bin->depth);
 			
 			bin->depthforced = depth;
@@ -546,7 +549,7 @@ int visual_bin_switch_actor_by_name (VisBin *bin, char *actname)
 
 		} else if (bin->actvideo->depth != VISUAL_VIDEO_DEPTH_GL) {
 
-			visual_log (VISUAL_LOG_INFO, "new depth is higher, or equal: video depth %d, depth %d bin depth %d", video->depth, depth,
+			visual_log (VISUAL_LOG_INFO, _("new depth is higher, or equal: video depth %d, depth %d bin depth %d"), video->depth, depth,
 					bin->depth);
 
 			visual_log (VISUAL_LOG_DEBUG, "depths i can locate: actvideo: %d   bin: %d   bin-old: %d", bin->actvideo->depth,
@@ -565,13 +568,13 @@ int visual_bin_switch_actor_by_name (VisBin *bin, char *actname)
 			bin->depthforced = video->depth;
 			bin->depthforcedmain = video->depth;
 			
-			visual_log (VISUAL_LOG_INFO, "Switching from Gl TO framebuffer for real, framebuffer depth: %d", video->depth);
+			visual_log (VISUAL_LOG_INFO, _("Switching from Gl TO framebuffer for real, framebuffer depth: %d"), video->depth);
 		}
 
-		visual_log (VISUAL_LOG_INFO, "Target depth selected: %d", depth);
+		visual_log (VISUAL_LOG_INFO, _("Target depth selected: %d"), depth);
 		visual_video_set_dimension (video, video->width, video->height);
 
-		visual_log (VISUAL_LOG_INFO, "Switch to new pitch: %d", bin->actvideo->pitch);
+		visual_log (VISUAL_LOG_INFO, _("Switch to new pitch: %d"), bin->actvideo->pitch);
 		if (bin->actvideo->depth != VISUAL_VIDEO_DEPTH_GL)
 			visual_video_set_pitch (video, bin->actvideo->pitch);
 		
@@ -580,16 +583,16 @@ int visual_bin_switch_actor_by_name (VisBin *bin, char *actname)
 		visual_log (VISUAL_LOG_DEBUG, "after allocating buffer");
 	}
 
-	visual_log (VISUAL_LOG_INFO, "video pitch of that what connects to the new actor %d", video->pitch);
+	visual_log (VISUAL_LOG_INFO, _("video pitch of that what connects to the new actor %d"), video->pitch);
 	visual_actor_set_video (actor, video);
 
 	bin->actmorphvideo = video;
 	bin->actmorphmanaged = TRUE;
 
-	visual_log (VISUAL_LOG_INFO, "switching... ******************************************");
+	visual_log (VISUAL_LOG_INFO, _("switching... ******************************************"));
 	visual_bin_switch_actor (bin, actor);
 
-	visual_log (VISUAL_LOG_INFO, "end switch actor by name function ******************");
+	visual_log (VISUAL_LOG_INFO, _("end switch actor by name function ******************"));
 	return 0;
 }
 
@@ -612,7 +615,7 @@ int visual_bin_switch_actor (VisBin *bin, VisActor *actor)
 		bin->privvid = NULL;
 	}
 
-	visual_log (VISUAL_LOG_INFO, "depth of the main actor: %d", bin->actor->video->depth);
+	visual_log (VISUAL_LOG_INFO, _("depth of the main actor: %d"), bin->actor->video->depth);
 
 	/* Starting the morph, but first check if we don't have anything todo with openGL */
 	if (bin->morphstyle == VISUAL_SWITCH_STYLE_MORPH &&
@@ -655,20 +658,21 @@ int visual_bin_switch_actor (VisBin *bin, VisActor *actor)
 		/* Initial privvid initialize */
 	
 		visual_log (VISUAL_LOG_DEBUG, "actmorph->video->depth %d %p", bin->actmorph->video->depth,
-				bin->actvideo->pixels);
+				visual_video_get_pixels (bin->actvideo));
 		
-		if (bin->actvideo->pixels != NULL && privvid->pixels != NULL)
-			visual_mem_copy (privvid->pixels, bin->actvideo->pixels, privvid->size);
-		else if (privvid->pixels != NULL)
-			memset (privvid->pixels, 0, privvid->size);
+		if (visual_video_get_pixels (bin->actvideo) != NULL && visual_video_get_pixels (privvid) != NULL)
+			visual_mem_copy (visual_video_get_pixels (privvid), visual_video_get_pixels (bin->actvideo),
+					visual_video_get_size (privvid));
+		else if (visual_video_get_pixels (privvid) != NULL)
+			visual_mem_set (visual_video_get_pixels (privvid), 0, visual_video_get_size (privvid));
 
 		visual_actor_set_video (bin->actor, privvid);
 		bin->privvid = privvid;
 	} else {
-		visual_log (VISUAL_LOG_DEBUG, "Pointer actvideo->pixels %p", bin->actvideo->pixels);
+		visual_log (VISUAL_LOG_DEBUG, "Pointer actvideo->pixels %p", visual_video_get_pixels (bin->actvideo));
 		if (bin->actor->video->depth != VISUAL_VIDEO_DEPTH_GL &&
-				bin->actvideo->pixels != NULL) {
-			memset (bin->actvideo->pixels, 0, bin->actvideo->size);
+				visual_video_get_pixels (bin->actvideo) != NULL) {
+			visual_mem_set (visual_video_get_pixels (bin->actvideo), 0, visual_video_get_size (bin->actvideo));
 		}
 	}
 
@@ -691,8 +695,8 @@ int visual_bin_switch_finalize (VisBin *bin)
 		visual_object_unref (VISUAL_OBJECT (bin->actor));
 
 	/* Copy over the depth to be sure, and for GL plugins */
-//	bin->actvideo->depth = bin->actmorphvideo->depth;
-//	visual_video_set_depth (bin->actvideo, bin->actmorphvideo->depth);
+/*	bin->actvideo->depth = bin->actmorphvideo->depth;
+	visual_video_set_depth (bin->actvideo, bin->actmorphvideo->depth); */
 
 	if (bin->actmorphmanaged == TRUE) {
 		visual_object_unref (VISUAL_OBJECT (bin->actmorphvideo));
@@ -721,7 +725,7 @@ int visual_bin_switch_finalize (VisBin *bin)
 	visual_log (VISUAL_LOG_DEBUG, " - in finalize - fscking depth from actvideo: %d %d", bin->actvideo->depth, bin->actvideo->bpp);
 
 	
-//	visual_bin_set_depth (bin, bin->actvideo->depth);
+/*	visual_bin_set_depth (bin, bin->actvideo->depth); */
 
 	depthflag = visual_actor_get_supported_depth (bin->actor);
 	fix_depth_with_bin (bin, bin->actvideo, bin_get_depth_using_preferred (bin, depthflag));
@@ -730,12 +734,12 @@ int visual_bin_switch_finalize (VisBin *bin)
 	bin->depthforcedmain = bin->actvideo->depth;
 	visual_log (VISUAL_LOG_DEBUG, "bin->depthforcedmain in finalize %d", bin->depthforcedmain);
 
-	// FIXME replace with a depth fixer
+	/* FIXME replace with a depth fixer */
 	if (bin->depthchanged == TRUE) {
-		visual_log (VISUAL_LOG_INFO, "negotiate without event");
+		visual_log (VISUAL_LOG_INFO, _("negotiate without event"));
 		visual_actor_video_negotiate (bin->actor, bin->depthforcedmain, TRUE, TRUE);
-		visual_log (VISUAL_LOG_INFO, "end negotiate without event");
-	//	visual_bin_sync (bin);
+		visual_log (VISUAL_LOG_INFO, _("end negotiate without event"));
+	/*	visual_bin_sync (bin); */
 	}
 
 	visual_log (VISUAL_LOG_DEBUG, "Leaving...");
@@ -797,7 +801,6 @@ int visual_bin_switch_set_time (VisBin *bin, long sec, long usec)
 	return 0;
 }
 
-
 int visual_bin_run (VisBin *bin)
 {
 	visual_log_return_val_if_fail (bin != NULL, -1);
@@ -819,9 +822,9 @@ int visual_bin_run (VisBin *bin)
 		 * to check this, it's a bit hacky */
 		visual_log_return_val_if_fail (bin->actmorph != NULL, -1);
 		visual_log_return_val_if_fail (bin->actmorph->plugin != NULL, -1);
- 		if (bin->actmorph->plugin->realized == FALSE) {
+		if (bin->actmorph->plugin->realized == FALSE) {
 			visual_actor_realize (bin->actmorph);
-			
+
 			if (bin->actmorphmanaged == TRUE)
 				visual_actor_video_negotiate (bin->actmorph, bin->depthforced, FALSE, TRUE);
 			else
@@ -833,7 +836,7 @@ int visual_bin_run (VisBin *bin)
 		visual_log_return_val_if_fail (bin->actor->plugin != NULL, -1);
 		if (bin->actor->plugin->realized == FALSE) {
 			visual_actor_realize (bin->actor);
-			
+
 			if (bin->managed == TRUE)
 				visual_actor_video_negotiate (bin->actor, bin->depthforced, FALSE, TRUE);
 			else
@@ -845,7 +848,7 @@ int visual_bin_run (VisBin *bin)
 		visual_log_return_val_if_fail (bin->actor->video != NULL, -1);
 		if (bin->morphstyle == VISUAL_SWITCH_STYLE_DIRECT ||
 			bin->actor->video->depth == VISUAL_VIDEO_DEPTH_GL) {
-		
+
 			visual_bin_switch_finalize (bin);
 
 			/* We can't start drawing yet, the client needs to catch up with
@@ -873,7 +876,7 @@ int visual_bin_run (VisBin *bin)
 
 			if (bin->morph == NULL || bin->morph->plugin == NULL) {
 				visual_bin_switch_finalize (bin);
-		
+
 				return 0;
 			}
 
@@ -885,7 +888,7 @@ int visual_bin_run (VisBin *bin)
 			if (visual_morph_is_done (bin->morph) == TRUE)
 				visual_bin_switch_finalize (bin);
 		} else {
-//			visual_bin_switch_finalize (bin);
+/*			visual_bin_switch_finalize (bin); */
 		}
 	}
 

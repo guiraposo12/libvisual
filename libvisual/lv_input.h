@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_input.h,v 1.17 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -28,13 +28,18 @@
 #include <libvisual/lv_plugin.h>
 #include <libvisual/lv_common.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+VISUAL_BEGIN_DECLS
 
-#define VISUAL_INPUT(obj)				(VISUAL_CHECK_CAST ((obj), 0, VisInput))
+#define VISUAL_INPUT(obj)				(VISUAL_CHECK_CAST ((obj), VisInput))
+#define VISUAL_INPUT_PLUGIN(obj)			(VISUAL_CHECK_CAST ((obj), VisInputPlugin))
+
+/**
+ * Type defination that should be used in plugins to set the plugin type for an input  plugin.
+ */
+#define VISUAL_PLUGIN_TYPE_INPUT	"Libvisual:core:input"
 
 typedef struct _VisInput VisInput;
+typedef struct _VisInputPlugin VisInputPlugin;
 
 /**
  * Callback function that is set using visual_input_set_callback should use this signature.
@@ -49,6 +54,20 @@ typedef struct _VisInput VisInput;
  * @arg priv Private field to be used by the client. The library will never touch this.
  */
 typedef int (*VisInputUploadCallbackFunc)(VisInput *input, VisAudio *audio, void *priv);
+
+/* Input plugin methods */
+
+/**
+ * An input plugin needs this signature for the sample upload function. The sample upload function
+ * is used to retrieve sample information when a input is being used to retrieve the
+ * audio sample.
+ *
+ * @arg plugin Pointer to the VisPluginData instance structure.
+ * @arg audio Pointer to the VisAudio in which the new sample data is set.
+ *
+ * @return 0 on succes -1 on error.
+ */
+typedef int (*VisPluginInputUploadFunc)(VisPluginData *plugin, VisAudio *audio);
 
 /**
  * The VisInput structure encapsulates the input plugin and provides
@@ -73,6 +92,20 @@ struct _VisInput {
 							  * is used instead of a plugin. */
 };
 
+/**
+ * The VisInputPlugin structure is the main data structure
+ * for the input plugin.
+ *
+ * The input plugin is used to retrieve PCM samples from
+ * certain sources.
+ */
+struct _VisInputPlugin {
+	VisObject			 object;	/**< The VisObject data. */
+	VisPluginInputUploadFunc	 upload;	/**< The sample upload function. This is the main function
+							  * of the plugin which uploads sample data into
+							  * libvisual. */
+};
+
 /* prototypes */
 VisPluginData *visual_input_get_plugin (VisInput *input);
 
@@ -82,6 +115,7 @@ const char *visual_input_get_prev_by_name (const char *name);
 int visual_input_valid_by_name (const char *name);
 
 VisInput *visual_input_new (const char *inputname);
+int visual_input_init (VisInput *input, const char *inputname);
 
 int visual_input_realize (VisInput *input);
 
@@ -89,8 +123,6 @@ int visual_input_set_callback (VisInput *input, VisInputUploadCallbackFunc callb
 
 int visual_input_run (VisInput *input);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+VISUAL_END_DECLS
 
 #endif /* _LV_INPUT_H */

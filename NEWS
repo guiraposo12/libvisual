@@ -3,8 +3,36 @@ of Libvisual.
 
 These are only visible changes, for more details look at the ChangeLog.
 
-New in 0.2.0: 2005-02-09:
+New in 0.4.0: xxxx-xx-xx:
+* Real time timestamping support. (Dennis)
+* Will unref plugins that don't match the ABI version. (Dennis)
+* Added VisRectangle system. (Dennis)
+* New BMP loader that supports all depths and RLE encoding. (Sepp)
+* visual_mem_set(), visual_mem_set16(), visual_mem_set32()
+  Optimized memset functions. (Dennis)
+* VisVideo new composite system. (Dennis)
+* VisVideo sub regions. (Dennis)
+* visual_video_zoom_*(). (Jaak)
+* visual_video_mirror_*(). (Jaak)
+* visual_video_rotate_*(). (Jaak)
+* Removed obsolete visual_video_depth_transform_to_buffer(). (Jaak)
+* Added VisCollection system. (Dennis)
+* Added VisHashmap. (Dennis)
+* Added VisCache. (Dennis)
+* VisAudio rewrite. (Dennis)
+* Added .license bit to VisPluginInfo for realtime license check. (Dennis)
+* Removed .struct_size and .api_version from the VisPluginInfo structure,
+  and revamped the plugin version check system. Put
+  VISUAL_PLUGIN_API_VERSION_VALIDATOR somewhere in your plugin and it'll
+  work. (Dennis)
+* Homedir installable plugins ~/.libvisual/actor transform morph input. (Dennis)
+* Added VisOS. Realtime priority functions are hosted in this module. (Dennis)
+* Added VisMath. All kind of math related functions have been added, most
+  note worthy are the _vectorized_. All of these are accelerated by
+  mmx/3dnow/sse instructions.
+* VisFourier completely revamped. (Chong Kai Xiong)
 
+New in 0.2.0: 2005-02-09:
 * VisTransform subsystem. (Dennis)
 * visual_palette_color_cycle() function. (Dennis)
 * visual_param_container_copy_match() function. (Dennis)

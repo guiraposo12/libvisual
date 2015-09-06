@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_palette.c,v 1.21 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -59,12 +59,43 @@ VisPalette *visual_palette_new (int ncolors)
 
 	pal = visual_mem_new0 (VisPalette, 1);
 
+	visual_palette_init (pal);
+
 	/* Do the VisObject initialization */
-	visual_object_initialize (VISUAL_OBJECT (pal), TRUE, palette_dtor);
+	visual_object_set_allocated (VISUAL_OBJECT (pal), TRUE);
+	visual_object_ref (VISUAL_OBJECT (pal));
 
 	visual_palette_allocate_colors (pal, ncolors);
 
 	return pal;
+}
+
+/**
+ * Initializes a VisPalette, this should not be used to reset a VisPalette.
+ * The resulting initialized VisPalette is a valid VisObject even if it was not allocated.
+ * Keep in mind that VisPalette structures that were created by visual_palette_new() should not
+ * be passed to visual_palette_init().
+ *
+ * @see visual_palette_new
+ *
+ * @param pal Pointer to the VisPalette which needs to be initialized.
+ *
+ * @return VISUAL_OK on succes, -VISUAL_ERROR_PALETTE_NULL on failure.
+ */
+int visual_palette_init (VisPalette *pal)
+{
+	visual_log_return_val_if_fail (pal != NULL, -VISUAL_ERROR_PALETTE_NULL);
+
+	/* Do the VisObject initialization */
+	visual_object_clear (VISUAL_OBJECT (pal));
+	visual_object_set_dtor (VISUAL_OBJECT (pal), palette_dtor);
+	visual_object_set_allocated (VISUAL_OBJECT (pal), FALSE);
+
+	/* Reset the VisPalette data */
+	pal->ncolors = 0;
+	pal->colors = NULL;
+
+	return VISUAL_OK;
 }
 
 /**
@@ -117,7 +148,7 @@ int visual_palette_free_colors (VisPalette *pal)
 
 	if (pal->colors != NULL)
 		visual_mem_free (pal->colors);
-	
+
 	pal->colors = NULL;
 	pal->ncolors = 0;
 
@@ -142,7 +173,7 @@ int visual_palette_blend (VisPalette *dest, VisPalette *src1, VisPalette *src2, 
 	visual_log_return_val_if_fail (dest != NULL, -VISUAL_ERROR_PALETTE_NULL);
 	visual_log_return_val_if_fail (src1 != NULL, -VISUAL_ERROR_PALETTE_NULL);
 	visual_log_return_val_if_fail (src2 != NULL, -VISUAL_ERROR_PALETTE_NULL);
-	
+
 	if (src1->ncolors != src2->ncolors)
 		return -VISUAL_ERROR_PALETTE_SIZE;
 
@@ -177,7 +208,7 @@ VisColor *visual_palette_color_cycle (VisPalette *pal, float rate)
 	float rdiff = rate - irate;
 
 	visual_log_return_val_if_fail (pal != NULL, NULL);
-	
+
 	irate = irate % pal->ncolors;
 	alpha = rdiff * 255;
 
@@ -202,6 +233,18 @@ VisColor *visual_palette_color_cycle (VisPalette *pal, float rate)
 	color->b = ((alpha * (tmp1->b - tmp2->b) >> 8) + tmp2->b);
 
 	return color;
+}
+
+int visual_palette_find_color (VisPalette *pal, VisColor *color)
+{
+	int i;
+
+	for (i = 0; i < pal->ncolors; i++) {
+		if (visual_color_compare (&pal->colors[i], color) == TRUE)
+			return i;
+	}
+
+	return -1;
 }
 
 /**

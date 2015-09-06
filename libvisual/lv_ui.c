@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_ui.c,v 1.59 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -41,7 +41,7 @@ static int box_dtor (VisObject *object)
 {
 	VisUIBox *box = VISUAL_UI_BOX (object);
 
-	visual_list_destroy_elements (&box->childs);
+	visual_collection_destroy (VISUAL_COLLECTION (&box->childs));
 
 	widget_dtor (object);
 
@@ -52,8 +52,8 @@ static int table_dtor (VisObject *object)
 {
 	VisUITable *table = VISUAL_UI_TABLE (object);
 
-	visual_list_destroy_elements (&table->childs);
-	
+	visual_collection_destroy (VISUAL_COLLECTION (&table->childs));
+
 	widget_dtor (object);
 
 	return VISUAL_OK;
@@ -67,6 +67,18 @@ static int table_entry_dtor (VisObject *object)
 		visual_object_unref (VISUAL_OBJECT (tentry->widget));
 
 	tentry->widget = NULL;
+
+	return VISUAL_OK;
+}
+
+static int notebook_dtor (VisObject *object)
+{
+	VisUINotebook *notebook = VISUAL_UI_NOTEBOOK (object);
+
+	visual_collection_destroy (VISUAL_COLLECTION (&notebook->labels));
+	visual_collection_destroy (VISUAL_COLLECTION (&notebook->childs));
+
+	widget_dtor (object);
 
 	return VISUAL_OK;
 }
@@ -295,7 +307,7 @@ VisUIWidget *visual_ui_box_new (VisUIOrientType orient)
 
 	visual_ui_widget_set_size_request (VISUAL_UI_WIDGET (box), -1, -1);
 
-	visual_list_set_destroyer (&box->childs, visual_object_list_destroyer);
+	visual_collection_set_destroyer (VISUAL_COLLECTION (&box->childs), visual_object_collection_destroyer);
 
 	return VISUAL_UI_WIDGET (box);
 }
@@ -373,7 +385,7 @@ VisUIWidget *visual_ui_table_new (int rows, int cols)
 
 	visual_ui_widget_set_size_request (VISUAL_UI_WIDGET (table), -1, -1);
 
-	visual_list_set_destroyer (&table->childs, visual_object_list_destroyer);
+	visual_collection_set_destroyer (VISUAL_COLLECTION (&table->childs), visual_object_collection_destroyer);
 
 	return VISUAL_UI_WIDGET (table);
 }
@@ -442,6 +454,80 @@ VisList *visual_ui_table_get_childs (VisUITable *table)
 	visual_log_return_val_if_fail (table != NULL, NULL);
 
 	return &table->childs;
+}
+
+/**
+ * Creates a new VisUINotebook, this can is a container which can contain multiple childs under notebook tabs.
+ *
+ * @return The newly created VisUINotebook in the form of a VisUIWidget.
+ */
+VisUIWidget *visual_ui_notebook_new ()
+{
+	VisUINotebook *notebook;
+
+	notebook = visual_mem_new0 (VisUINotebook, 1);
+
+	/* Do the VisObject initialization */
+	visual_object_initialize (VISUAL_OBJECT (notebook), TRUE, notebook_dtor);
+
+	VISUAL_UI_WIDGET (notebook)->type = VISUAL_WIDGET_TYPE_NOTEBOOK;
+
+	visual_ui_widget_set_size_request (VISUAL_UI_WIDGET (notebook), -1, -1);
+
+	visual_collection_set_destroyer (VISUAL_COLLECTION (&notebook->labels), visual_object_collection_destroyer);
+	visual_collection_set_destroyer (VISUAL_COLLECTION (&notebook->childs), visual_object_collection_destroyer);
+
+	return VISUAL_UI_WIDGET (notebook);
+}
+
+/**
+ * Adds a VisUIWidget with a text label (Internally stored as a VisUILabel) to the notebook container.
+ *
+ * @param notebook Pointer to the VisUINotebook to which the VisUIWidget is added.
+ * @param widget Pointer to the VisUIWidget that is added to the VisUINotebook.
+ * @param label The label attached to the tab of this notebook entry.
+ *
+ * @return VISUAL_OK on succes, -VISUAL_ERROR_UI_NOTEBOOK_NULL, -VISUAL_ERROR_UI_WIDGET_NULL or -VISUAL_ERROR_NULL
+ * 	on failure.
+ */
+int visual_ui_notebook_add (VisUINotebook *notebook, VisUIWidget *widget, char *label)
+{
+	visual_log_return_val_if_fail (notebook != NULL, -VISUAL_ERROR_UI_NOTEBOOK_NULL);
+	visual_log_return_val_if_fail (widget != NULL, -VISUAL_ERROR_UI_WIDGET_NULL);
+	visual_log_return_val_if_fail (label != NULL, -VISUAL_ERROR_NULL);
+
+	visual_list_add (&notebook->labels, visual_ui_label_new (label, FALSE));
+	visual_list_add (&notebook->childs, widget);
+
+	return VISUAL_OK;
+}
+
+/**
+ * Retrieve a VisList containing VisUIWidget elements, that are the childs for every tab.
+ *
+ * @param notebook Pointer to the VisUINotebook from which the childs are requested.
+ *
+ * @return VisList containing the childs of the VisUINotebook, or NULL on failure.
+ */
+VisList *visual_ui_notebook_get_childs (VisUINotebook *notebook)
+{
+	visual_log_return_val_if_fail (notebook != NULL, NULL);
+
+	return &notebook->childs;
+}
+
+/**
+ * Retrieve a VisList containing VisUILabel elements, that are the child labels for every tab.
+ *
+ * @param notebook Pointer to the VisUINotebook from which the child labels are requested.
+ *
+ * @return VisList containing the child labels of the VisUINotebook, or NULL on failure.
+ */
+VisList *visual_ui_notebook_get_childlabels (VisUINotebook *notebook)
+{
+	visual_log_return_val_if_fail (notebook != NULL, NULL);
+
+	return &notebook->labels;
 }
 
 /**
@@ -862,12 +948,55 @@ VisUIWidget *visual_ui_color_new ()
 
 	/* Do the VisObject initialization */
 	visual_object_initialize (VISUAL_OBJECT (color), TRUE, widget_dtor);
-	
+
 	VISUAL_UI_WIDGET (color)->type = VISUAL_WIDGET_TYPE_COLOR;
 
 	visual_ui_widget_set_size_request (VISUAL_UI_WIDGET (color), -1, -1);
 
 	return VISUAL_UI_WIDGET (color);
+}
+
+/**
+ * Creates a new VisUIColorButton, which can be used to select a color button.
+ *
+ * @return The newly created VisUIColorButton in the form of a VisUIWidget.
+ */
+VisUIWidget *visual_ui_colorbutton_new ()
+{
+	VisUIColorButton *colorbutton;
+
+	colorbutton = visual_mem_new0 (VisUIColorButton, 1);
+
+	/* Do the VisObject initialization */
+	visual_object_initialize (VISUAL_OBJECT (colorbutton), TRUE, widget_dtor);
+
+	VISUAL_UI_WIDGET (colorbutton)->type = VISUAL_WIDGET_TYPE_COLORBUTTON;
+
+	visual_ui_widget_set_size_request (VISUAL_UI_WIDGET (colorbutton), -1, -1);
+
+	return VISUAL_UI_WIDGET (colorbutton);
+}
+
+/* FIXME finish */
+/**
+ * Creates a new VisUIColorPalette, which can be used to describe small palettes.
+ *
+ * @return The newly created VisUIColorPalette in the form of a VisUIWidget.
+ */
+VisUIWidget *visual_ui_colorpalette_new ()
+{
+	VisUIColorPalette *colorpalette;
+
+	colorpalette = visual_mem_new0 (VisUIColorPalette, 1);
+
+	/* Do the VisObject initialization */
+	visual_object_initialize (VISUAL_OBJECT (colorpalette), TRUE, widget_dtor);
+
+	VISUAL_UI_WIDGET (colorpalette)->type = VISUAL_WIDGET_TYPE_COLORPALETTE;
+
+	visual_ui_widget_set_size_request (VISUAL_UI_WIDGET (colorpalette), -1, -1);
+
+	return VISUAL_UI_WIDGET (colorpalette);
 }
 
 /**
@@ -890,7 +1019,7 @@ VisUIChoiceEntry *visual_ui_choice_entry_new (const char *name, VisParamEntry *v
 
 	/* Do the VisObject initialization */
 	visual_object_initialize (VISUAL_OBJECT (centry), TRUE, NULL);
-	
+
 	centry->name = name;
 	centry->value = value;
 
@@ -964,8 +1093,8 @@ int visual_ui_choice_free_choices (VisUIChoice *choice)
 {
 	visual_log_return_val_if_fail (choice != NULL, -VISUAL_ERROR_UI_CHOICE_NULL);
 
-	visual_list_set_destroyer (&choice->choices.choices, visual_object_list_destroyer);
-	visual_list_destroy_elements (&choice->choices.choices); 
+	visual_collection_set_destroyer (VISUAL_COLLECTION (&choice->choices.choices), visual_object_collection_destroyer);
+	visual_collection_destroy (VISUAL_COLLECTION (&choice->choices.choices));
 
 	return VISUAL_OK;
 }
@@ -1017,7 +1146,7 @@ int visual_ui_choice_get_active (VisUIChoice *choice)
 
 	while ((centry = visual_list_next (&choice->choices.choices, &le)) != NULL) {
 		VisParamEntry *cparam;
-		
+
 		cparam = centry->value;
 
 		if (visual_param_entry_compare (param, cparam) == TRUE)
@@ -1072,7 +1201,7 @@ VisUIWidget *visual_ui_popup_new ()
 
 	/* Do the VisObject initialization */
 	visual_object_initialize (VISUAL_OBJECT (popup), TRUE, choice_dtor);
-	
+
 	VISUAL_UI_WIDGET (popup)->type = VISUAL_WIDGET_TYPE_POPUP;
 
 	visual_ui_widget_set_size_request (VISUAL_UI_WIDGET (popup), -1, -1);
@@ -1094,7 +1223,7 @@ VisUIWidget *visual_ui_list_new ()
 
 	/* Do the VisObject initialization */
 	visual_object_initialize (VISUAL_OBJECT (list), TRUE, choice_dtor);
-	
+
 	VISUAL_UI_WIDGET (list)->type = VISUAL_WIDGET_TYPE_LIST;
 
 	visual_ui_widget_set_size_request (VISUAL_UI_WIDGET (list), -1, -1);
@@ -1122,7 +1251,7 @@ VisUIWidget *visual_ui_radio_new (VisUIOrientType orient)
 	VISUAL_UI_WIDGET (radio)->type = VISUAL_WIDGET_TYPE_RADIO;
 
 	radio->orient = orient;
-	
+
 	visual_ui_widget_set_size_request (VISUAL_UI_WIDGET (radio), -1, -1);
 
 	return VISUAL_UI_WIDGET (radio);

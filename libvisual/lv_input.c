@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_input.c,v 1.29 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -21,10 +21,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#include <config.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <gettext.h>
 
 #include "lv_list.h"
 #include "lv_input.h"
@@ -58,7 +61,7 @@ static VisInputPlugin *get_input_plugin (VisInput *input)
 	visual_log_return_val_if_fail (input != NULL, NULL);
 	visual_log_return_val_if_fail (input->plugin != NULL, NULL);
 
-	inplugin = VISUAL_PLUGIN_INPUT (input->plugin->info->plugin);
+	inplugin = VISUAL_INPUT_PLUGIN (input->plugin->info->plugin);
 
 	return inplugin;
 }
@@ -146,30 +149,60 @@ int visual_input_valid_by_name (const char *name)
 VisInput *visual_input_new (const char *inputname)
 {
 	VisInput *input;
-	VisPluginRef *ref;
 
-//	visual_log_return_val_if_fail (__lv_plugins_input != NULL && inputname == NULL, NULL);
-
-	if (__lv_plugins_input == NULL && inputname != NULL) {
-		visual_log (VISUAL_LOG_CRITICAL, "the plugin list is NULL");
-		return NULL;
-	}
-	
 	input = visual_mem_new0 (VisInput, 1);
-	
-	input->audio = visual_audio_new ();
+
+	visual_input_init (input, inputname);
 
 	/* Do the VisObject initialization */
-	visual_object_initialize (VISUAL_OBJECT (input), TRUE, input_dtor);
-
-	if (inputname == NULL)
-		return input;
-	
-	ref = visual_plugin_find (__lv_plugins_input, inputname);
-	
-	input->plugin = visual_plugin_load (ref);
+	visual_object_set_allocated (VISUAL_OBJECT (input), TRUE);
+	visual_object_ref (VISUAL_OBJECT (input));
 
 	return input;
+}
+
+/**
+ * Initializes a VisInput, this will set the allocated flag for the object to FALSE. Should not
+ * be used to reset a VisInput, or on a VisInput created by visual_input_new().
+ *
+ * @see visual_input_new
+ *
+ * @param input Pointer to the VisInput that is initialized.
+ * @param inputname
+ *	The name of the plugin to load, or NULL to simply initialize a new input.
+ *
+ * @return VISUAL_OK on succes, -VISUAL_ERROR_INPUT_NULL or -VISUAL_ERROR_PLUGIN_NO_LIST on failure.
+ */
+int visual_input_init (VisInput *input, const char *inputname)
+{
+	VisPluginRef *ref;
+
+	visual_log_return_val_if_fail (input != NULL, -VISUAL_ERROR_INPUT_NULL);
+
+	if (__lv_plugins_input == NULL && inputname != NULL) {
+		visual_log (VISUAL_LOG_CRITICAL, _("the plugin list is NULL"));
+
+		return -VISUAL_ERROR_PLUGIN_NO_LIST;
+	}
+
+	/* Do the VisObject initialization */
+	visual_object_clear (VISUAL_OBJECT (input));
+	visual_object_set_dtor (VISUAL_OBJECT (input), input_dtor);
+	visual_object_set_allocated (VISUAL_OBJECT (input), FALSE);
+
+	/* Reset the VisInput data */
+	input->audio = visual_audio_new ();
+	input->plugin = NULL;
+	input->callback = NULL;
+
+	if (inputname == NULL)
+		return VISUAL_OK;
+
+	ref = visual_plugin_find (__lv_plugins_input, inputname);
+
+	input->plugin = visual_plugin_load (ref);
+
+	return VISUAL_OK;
 }
 
 /**
@@ -231,10 +264,10 @@ int visual_input_run (VisInput *input)
 
 		if (inplugin == NULL) {
 			visual_log (VISUAL_LOG_CRITICAL, "The input plugin is not loaded correctly.");
-		
+
 			return -VISUAL_ERROR_INPUT_PLUGIN_NULL;
 		}
-		
+
 		inplugin->upload (input->plugin, input->audio);
 	} else
 		input->callback (input, input->audio, visual_object_get_private (VISUAL_OBJECT (input)));

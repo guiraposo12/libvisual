@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_palette.h,v 1.15 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -26,13 +26,11 @@
 
 #include <libvisual/lv_common.h>
 #include <libvisual/lv_color.h>
-	
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
 
-#define VISUAL_PALETTE(obj)				(VISUAL_CHECK_CAST ((obj), 0, VisPalette))
-	
+VISUAL_BEGIN_DECLS
+
+#define VISUAL_PALETTE(obj)				(VISUAL_CHECK_CAST ((obj), VisPalette))
+
 typedef struct _VisPalette VisPalette;
 
 /**
@@ -49,15 +47,20 @@ struct _VisPalette {
 	VisColor	*colors;	/**< Pointer to the colors. */
 };
 
+/* prototypes */
 VisPalette *visual_palette_new (int ncolors);
+int visual_palette_init (VisPalette *pal);
+
 int visual_palette_copy (VisPalette *dest, VisPalette *src);
+
 int visual_palette_allocate_colors (VisPalette *pal, int ncolors);
 int visual_palette_free_colors (VisPalette *pal);
+
 int visual_palette_blend (VisPalette *dest, VisPalette *src1, VisPalette *src2, float rate);
 VisColor *visual_palette_color_cycle (VisPalette *pal, float rate);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+int visual_palette_find_color (VisPalette *pal, VisColor *color);
+
+VISUAL_END_DECLS
 
 #endif /* _LV_PALETTE_H */

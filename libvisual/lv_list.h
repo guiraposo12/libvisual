@@ -1,18 +1,18 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * List implementation from RCL.
  * Copyright (C) 2002, 2003, 2004
- * 				Dennis Smit <ds@nerds-incorporated.org>,
- *			  	Sepp Wijnands <mrrazz@nerds-incorporated.org>,
- *			   	Tom Wimmenhove <nohup@nerds-incorporated.org>
+ *				Dennis Smit <ds@nerds-incorporated.org>,
+ *				Sepp Wijnands <mrrazz@nerds-incorporated.org>,
+ *				Tom Wimmenhove <nohup@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
- *  	    Sepp Wijnands <mrrazz@nerds-incorporated.org>,
- *   	    Tom Wimmenhove <nohup@nerds-incorporated.org>
+ *	    Sepp Wijnands <mrrazz@nerds-incorporated.org>,
+ *	    Tom Wimmenhove <nohup@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_list.h,v 1.19 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -33,26 +33,18 @@
 #define _LV_LIST_H
 
 #include <libvisual/lv_common.h>
+#include <libvisual/lv_collection.h>
 
 #if defined(__FreeBSD__) || defined(__OpenBSD__)
 #include <sys/queue.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+VISUAL_BEGIN_DECLS
 
-#define VISUAL_LIST(obj)				(VISUAL_CHECK_CAST ((obj), 0, VisList))
+#define VISUAL_LIST(obj)				(VISUAL_CHECK_CAST ((obj), VisList))
 
 typedef struct _VisListEntry VisListEntry;
 typedef struct _VisList VisList;
-
-/**
- * An VisList destroyer function needs this signature.
- *
- * @arg data The data that was stored in a VisListEntry and thus can be destroyed.
- */
-typedef void (*VisListDestroyerFunc)(void *data);
 
 /**
  * The VisListEntry data structure is an entry within the linked list.
@@ -62,29 +54,27 @@ typedef void (*VisListDestroyerFunc)(void *data);
 struct _VisListEntry {
 	VisListEntry		*prev;	/**< Previous entry in the list. */
 	VisListEntry		*next;	/**< Next entry in the list. */
+
 	void			*data;	/**< Pointer to the data for this entry. */
 };
 
 /**
- * The VisList data structure holds the linked list.
- * It contains an entry pointer to both the head and tail of the list as well
- * an entry counter.
+ * The VisList data structure represents a linked list. It inherents from the
+ * VisCollection class.
  */
 struct _VisList {
-	VisObject		 object;	/**< The VisObject data. */
-	VisListDestroyerFunc	 destroyer;	/**< The List destroyer function. */
+	VisCollection		 collection;	/**< The VisCollection data. */
+
 	VisListEntry		*head;		/**< Pointer to the beginning of the list. */
 	VisListEntry		*tail;		/**< Pointer to the end of the list. */
+
 	int			 count;		/**< Number of entries that are in the list. */
 };
 
 
 /* prototypes */
-VisList *visual_list_new (VisListDestroyerFunc destroyer);
-int visual_list_free (VisList *list);
-int visual_list_destroy_elements (VisList *list);
-
-int visual_list_set_destroyer (VisList *list, VisListDestroyerFunc destroyer);
+VisList *visual_list_new (VisCollectionDestroyerFunc destroyer);
+int visual_list_init (VisList *list, VisCollectionDestroyerFunc destroyer);
 
 void *visual_list_next (VisList *list, VisListEntry **le);
 void *visual_list_prev (VisList *list, VisListEntry **le);
@@ -94,13 +84,17 @@ void *visual_list_get (VisList *list, int index);
 int visual_list_add_at_begin (VisList *list, void *data);
 int visual_list_add (VisList *list, void *data);
 
+int visual_list_chain_at_begin (VisList *list, VisListEntry *le);
+int visual_list_chain (VisList *list, VisListEntry *le);
+int visual_list_unchain (VisList *list, VisListEntry *le);
+
 int visual_list_insert (VisList *list, VisListEntry **le, void *data);
 int visual_list_delete (VisList *list, VisListEntry **le);
 
+int visual_list_destroy (VisList *list, VisListEntry **le);
+
 int visual_list_count (VisList *list);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+VISUAL_END_DECLS
 
 #endif /* _LV_LIST_H */

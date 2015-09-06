@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_morph.c,v 1.31 2006/01/27 20:18:26 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -21,10 +21,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#include <config.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <gettext.h>
 
 #include <lvconfig.h>
 #include "lv_log.h"
@@ -59,7 +62,7 @@ static VisMorphPlugin *get_morph_plugin (VisMorph *morph)
 	visual_log_return_val_if_fail (morph != NULL, NULL);
 	visual_log_return_val_if_fail (morph->plugin != NULL, NULL);
 
-	morphplugin = VISUAL_PLUGIN_MORPH (morph->plugin->info->plugin);
+	morphplugin = VISUAL_MORPH_PLUGIN (morph->plugin->info->plugin);
 
 	return morphplugin;
 }
@@ -142,34 +145,73 @@ int visual_morph_valid_by_name (const char *name)
  * 	morph.
  * 
  * @return A newly allocated VisMorph, optionally containing a loaded plugin. Or NULL on failure.
- */  
+ */
 VisMorph *visual_morph_new (const char *morphname)
 {
 	VisMorph *morph;
-	VisPluginRef *ref;
-
-	if (__lv_plugins_morph == NULL && morphname != NULL) {
-		visual_log (VISUAL_LOG_CRITICAL, "the plugin list is NULL");
-		return NULL;
-	}
 
 	morph = visual_mem_new0 (VisMorph, 1);
 
+	visual_morph_init (morph, morphname);
+
 	/* Do the VisObject initialization */
-	visual_object_initialize (VISUAL_OBJECT (morph), TRUE, morph_dtor);
+	visual_object_set_allocated (VISUAL_OBJECT (morph), TRUE);
+	visual_object_ref (VISUAL_OBJECT (morph));
+
+	return morph;
+}
+
+/**
+ * Initializes a VisMorph, this will set the allocated flag for the object to FALSE. Should not
+ * be used to reset a VisMorph, or on a VisMorph created by visual_morph_new().
+ *
+ * @see visual_morph_new
+ *
+ * @param morph Pointer to the VisMorph that is initialized.
+ * @param morphname
+ *	The name of the plugin to load, or NULL to simply initialize a new morph.
+ *
+ * @return VISUAL_OK on succes, -VISUAL_ERROR_MORPH_NULL or -VISUAL_ERROR_PLUGIN_NO_LIST on failure.
+ */
+int visual_morph_init (VisMorph *morph, const char *morphname)
+{
+	VisPluginRef *ref;
+
+	visual_log_return_val_if_fail (morph != NULL, -VISUAL_ERROR_MORPH_NULL);
+
+	if (__lv_plugins_morph == NULL && morphname != NULL) {
+		visual_log (VISUAL_LOG_CRITICAL, _("the plugin list is NULL"));
+
+		return -VISUAL_ERROR_PLUGIN_NO_LIST;
+	}
+
+	/* Do the VisObject initialization */
+	visual_object_clear (VISUAL_OBJECT (morph));
+	visual_object_set_dtor (VISUAL_OBJECT (morph), morph_dtor);
+	visual_object_set_allocated (VISUAL_OBJECT (morph), FALSE);
+	
+	/* Reset the VisMorph data */
+	morph->plugin = NULL;
+	morph->dest = NULL;
+	visual_palette_init (&morph->morphpal);
+	visual_time_init (&morph->morphtime);
+	visual_timer_init (&morph->timer);
+	visual_morph_set_rate (morph, 0);
+	visual_morph_set_steps (morph, 0);
+	morph->stepsdone = 0;
 
 	visual_palette_allocate_colors (&morph->morphpal, 256);
 
 	visual_morph_set_mode (morph, VISUAL_MORPH_MODE_SET);
 
 	if (morphname == NULL)
-		return morph;
+		return VISUAL_OK;
 
 	ref = visual_plugin_find (__lv_plugins_morph, morphname);
 
 	morph->plugin = visual_plugin_load (ref);
 
-	return morph;
+	return VISUAL_OK;
 }
 
 /**
@@ -209,7 +251,23 @@ int visual_morph_get_supported_depth (VisMorph *morph)
 	if (morphplugin == NULL)
 		return -VISUAL_ERROR_MORPH_PLUGIN_NULL;
 
-	return morphplugin->depth;
+	return morphplugin->vidoptions.depth;
+}
+
+VisVideoAttributeOptions *visual_morph_get_video_attribute_options (VisMorph *morph)
+{
+	VisPluginData *plugin;
+	VisMorphPlugin *morphplugin;
+
+	visual_log_return_val_if_fail (morph != NULL, NULL);
+	visual_log_return_val_if_fail (morph->plugin != NULL, NULL);
+
+	morphplugin = get_morph_plugin (morph);
+
+	if (morphplugin == NULL)
+		return NULL;
+
+	return &morphplugin->vidoptions;
 }
 
 /**
@@ -368,7 +426,7 @@ int visual_morph_requests_audio (VisMorph *morph)
 	
 	if (morphplugin == NULL) {
 		visual_log (VISUAL_LOG_CRITICAL,
-			"The given morph does not reference any plugin");
+			_("The given morph does not reference any plugin"));
 
 		return -VISUAL_ERROR_MORPH_PLUGIN_NULL;
 	}
@@ -407,7 +465,7 @@ int visual_morph_run (VisMorph *morph, VisAudio *audio, VisVideo *src1, VisVideo
 
 	if (morphplugin == NULL) {
 		visual_log (VISUAL_LOG_CRITICAL,
-			"The given morph does not reference any plugin");
+			_("The given morph does not reference any plugin"));
 
 		return -VISUAL_ERROR_MORPH_PLUGIN_NULL;
 	}

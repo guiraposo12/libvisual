@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_transform.c,v 1.8 2006/01/27 20:18:26 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -21,10 +21,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#include <config.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <gettext.h>
 
 #include "lvconfig.h"
 #include "lv_log.h"
@@ -58,7 +61,7 @@ static VisTransformPlugin *get_transform_plugin (VisTransform *transform)
 	visual_log_return_val_if_fail (transform != NULL, NULL);
 	visual_log_return_val_if_fail (transform->plugin != NULL, NULL);
 
-	transplugin = VISUAL_PLUGIN_TRANSFORM (transform->plugin->info->plugin);
+	transplugin = VISUAL_TRANSFORM_PLUGIN (transform->plugin->info->plugin);
 
 	return transplugin;
 }
@@ -145,26 +148,59 @@ int visual_transform_valid_by_name (const char *name)
 VisTransform *visual_transform_new (const char *transformname)
 {
 	VisTransform *transform;
-	VisPluginRef *ref;
 
-	if (__lv_plugins_transform == NULL && transformname != NULL) {
-		visual_log (VISUAL_LOG_CRITICAL, "the plugin list is NULL");
-		return NULL;
-	}
-	
 	transform = visual_mem_new0 (VisTransform, 1);
 
+	visual_transform_init (transform, transformname);
+
 	/* Do the VisObject initialization */
-	visual_object_initialize (VISUAL_OBJECT (transform), TRUE, transform_dtor);
+	visual_object_set_allocated (VISUAL_OBJECT (transform), TRUE);
+	visual_object_ref (VISUAL_OBJECT (transform));
+
+	return transform;
+}
+
+/**
+ * Initializes a VisTransform, this will set the allocated flag for the object to FALSE. Should not
+ * be used to reset a VisTransform, or on a VisTransform created by visual_transform_new().
+ *
+ * @see visual_transform_new
+ *
+ * @param transform Pointer to the VisTransform that is initialized.
+ * @param transformname
+ *	The name of the plugin to load, or NULL to simply initialize a new transform.
+ *
+ * @return VISUAL_OK on succes, -VISUAL_ERROR_TRANSFORM_NULL or -VISUAL_ERROR_PLUGIN_NO_LIST on failure.
+ */
+int visual_transform_init (VisTransform *transform, const char *transformname)
+{
+	VisPluginRef *ref;
+
+	visual_log_return_val_if_fail (transform != NULL, -VISUAL_ERROR_TRANSFORM_NULL);
+
+	if (__lv_plugins_transform == NULL && transformname != NULL) {
+		visual_log (VISUAL_LOG_CRITICAL, _("the plugin list is NULL"));
+		return -VISUAL_ERROR_PLUGIN_NO_LIST;
+	}
+
+	/* Do the VisObject initialization */
+	visual_object_clear (VISUAL_OBJECT (transform));
+	visual_object_set_dtor (VISUAL_OBJECT (transform), transform_dtor);
+	visual_object_set_allocated (VISUAL_OBJECT (transform), FALSE);
+
+	/* Reset the VisTransform data */
+	transform->plugin = NULL;
+	transform->video = NULL;
+	transform->pal = NULL;
 
 	if (transformname == NULL)
-		return transform;
+		return VISUAL_OK;
 
 	ref = visual_plugin_find (__lv_plugins_transform, transformname);
 
 	transform->plugin = visual_plugin_load (ref);
 
-	return transform;
+	return VISUAL_OK;
 }
 
 /**
@@ -192,7 +228,7 @@ int visual_transform_realize (VisTransform *transform)
  *
  * @return VISUAL_OK on succes, -VISUAL_ERROR_TRANSFORM_NULL, -VISUAL_ERROR_PLUGIN_NULL, -VISUAL_ERROR_PLUGIN_REF_NULL
  * 	or -VISUAL_ERROR_TRANSFORM_NEGOTIATE on failure. 
- */ 
+ */
 int visual_transform_video_negotiate (VisTransform *transform)
 {
 	int depthflag;
@@ -205,7 +241,7 @@ int visual_transform_video_negotiate (VisTransform *transform)
 
 	if (visual_video_depth_is_supported (depthflag, transform->video->depth) == FALSE)
 		return -VISUAL_ERROR_TRANSFORM_NEGOTIATE;
-	
+
 	visual_event_queue_add_resize (&transform->plugin->eventqueue, transform->video,
 			transform->video->width, transform->video->height);
 
@@ -235,7 +271,22 @@ int visual_transform_get_supported_depth (VisTransform *transform)
 	if (transplugin == NULL)
 		return -VISUAL_ERROR_TRANSFORM_PLUGIN_NULL;
 
-	return transplugin->depth;
+	return transplugin->vidoptions.depth;
+}
+
+VisVideoAttributeOptions *visual_transform_get_video_attribute_options (VisTransform *transform)
+{
+	VisTransformPlugin *transplugin;
+
+	visual_log_return_val_if_fail (transform != NULL, NULL);
+	visual_log_return_val_if_fail (transform->plugin != NULL, NULL);
+
+	transplugin = get_transform_plugin (transform);
+
+	if (transplugin == NULL)
+		return NULL;
+
+	return &transplugin->vidoptions;
 }
 
 /**
@@ -279,7 +330,7 @@ int visual_transform_set_video (VisTransform *transform, VisVideo *video)
  * @param palette Pointer to the VisPalette which is used to override the palette in the VisTransform.
  * 
  * @return VISUAL_OK on succes, -VISUAL_ERROR_TRANSFORM_NULL on failure.
- */ 
+ */
 int visual_transform_set_palette (VisTransform *transform, VisPalette *palette)
 {
 	visual_log_return_val_if_fail (transform != NULL, -VISUAL_ERROR_TRANSFORM_NULL);
@@ -311,7 +362,7 @@ int visual_transform_run (VisTransform *transform, VisAudio *audio)
 		if ((ret = visual_transform_run_video (transform, audio)) != VISUAL_OK)
 			return ret;
 	}
-	
+
 	if (transform->pal != NULL) {
 		if ((ret = visual_transform_run_palette (transform, audio)) != VISUAL_OK)
 			return ret;
@@ -344,7 +395,7 @@ int visual_transform_run_video (VisTransform *transform, VisAudio *audio)
 
 	if (transplugin == NULL) {
 		visual_log (VISUAL_LOG_CRITICAL,
-			"The given transform does not reference any transform plugin");
+			_("The given transform does not reference any transform plugin"));
 
 		return -VISUAL_ERROR_TRANSFORM_PLUGIN_NULL;
 	}
@@ -380,7 +431,7 @@ int visual_transform_run_palette (VisTransform *transform, VisAudio *audio)
 
 	if (transplugin == NULL) {
 		visual_log (VISUAL_LOG_CRITICAL,
-			"The given transform does not reference any transform plugin");
+			_("The given transform does not reference any transform plugin"));
 
 		return -VISUAL_ERROR_TRANSFORM_PLUGIN_NULL;
 	}

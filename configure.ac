@@ -1,12 +1,26 @@
-# Process this file with autoconf to produce a configure script.
-
+dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.57)
-AC_INIT(Libvisual Library, 0.2.0, synap@nerds-incorporated.org, libvisual)
+
+dnl Version numbers
+m4_define([libvisual_version_major], [0])
+m4_define([libvisual_version_minor], [4])
+m4_define([libvisual_version_micro], [0])
+
+m4_define([libvisual_version], [libvisual_version_major.libvisual_version_minor.libvisual_version_micro])
+
+AC_INIT([Libvisual Library], [libvisual_version], [synap@nerds-incorporated.org], [libvisual])
 AM_INIT_AUTOMAKE([1.7.0 dist-bzip2])
 
-AC_CONFIG_HEADER(config.h)
+dnl TODO: Add these into lv_config.h (or maybe lv_version.h)
+LIBVISUAL_VERSION_MAJOR=libvisual_version_major
+LIBVISUAL_VERSION_MINOR=libvisual_version_minor
+LIBVISUAL_VERSION_MICRO=libvisual_version_micro
+LIBVISUAL_VERSION=libvisual_version
 
-AC_PREFIX_DEFAULT(/usr)
+LIBVISUAL_VERSION_SUFFIX="$LIBVISUAL_VERSION_MAJOR.$LIBVISUAL_VERSION_MINOR"
+AC_SUBST(LIBVISUAL_VERSION_SUFFIX)
+
+AC_CONFIG_HEADER(config.h)
 
 AC_CANONICAL_HOST
 
@@ -14,6 +28,7 @@ lv_mips=no
 lv_alpha=no
 lv_sparc=no
 lv_ix86=no
+lv_x86_64=no
 lv_powerpc=no
 
 case "$host_cpu" in
@@ -21,6 +36,7 @@ case "$host_cpu" in
 	alpha)          lv_alpha=yes;;
 	sparc)          lv_sparc=yes;;
 	i*86)           lv_ix86=yes;;
+	x86_64*)	lv_x86_64=yes;;
        	powerpc|ppc)    lv_powerpc=yes;;
 	*)		lv_arch_unknown=yes;;
 esac
@@ -96,7 +112,7 @@ fi
 # Checks for header files.
 AC_HEADER_DIRENT
 AC_HEADER_STDC
-AC_CHECK_HEADERS([fcntl.h sys/types.h stdlib.h string.h sys/time.h unistd.h])
+AC_CHECK_HEADERS([fcntl.h sys/types.h stdlib.h string.h sys/time.h unistd.h sched.h sys/sched.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -132,6 +148,14 @@ AC_CHECK_LIB([dl], [dlsym], [LIBS="-ldl $LIBS"],
 	     AC_MSG_WARN([*** You need dlsym() to make use of Libvisual.]))
 AC_CHECK_LIB([m], [sqrt], [LIBS="-lm $LIBS"],
 	     AC_MSG_ERROR([*** You need the Standard C Math Library to build Libvisual.]))
+
+# Internationalization
+GETTEXT_PACKAGE="libvisual-${LIBVISUAL_VERSION_SUFFIX}"
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [GETTEXT package name])
+AC_DEFINE_UNQUOTED(LOCALEDIR, "${prefix}/share/locale", [String catalog location])
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.14.1])
 
 dnl -------------------------------
 dnl Check for native thread support
@@ -172,11 +196,11 @@ AC_ARG_ENABLE([enable_threads],
 		[Turn on basic thread support @<:@default=enabled@:>@]),
 		[enable_threads=$enableval],
 		[enable_threads=yes])
-AC_MSG_CHECKING([wheter to enable thread support])
+AC_MSG_CHECKING([whether to enable thread support])
 if test x$enable_threads = xyes; then
   AC_MSG_RESULT([yes])
-  AC_MSG_CHECKING([for the native thread implementation available])
   have_threads=none
+  AC_MSG_CHECKING([for thread implementation available])
   case $host in
   	*-*-mingw*)
 		have_threads=win32
@@ -194,6 +218,15 @@ if test x$enable_threads = xyes; then
 		[pthread_mutex_t m; 
 		pthread_mutex_init (&m, pthread_mutexattr_default);],
 		have_threads=dce)
+  fi
+  if test "x$have_threads" = xnone; then
+    PKG_CHECK_MODULES(GTHREAD2, gthread-2.0 >= 2.2.0, [have_gthread2="yes"], [have_gthread2="no"])
+    if test x"$have_gthread2" = xyes; then
+      have_threads=gthread2
+      AC_SUBST(GTHREAD2_CFLAGS)
+      AC_SUBST(GTHREAD2_LIBS)
+      AC_DEFINE([LV_HAVE_GTHREAD2],[1],[glib-2.0 thread implementation available])
+    fi
   fi
   # In future we will check for more thread models...
 
@@ -262,8 +295,10 @@ fi
               ;;
             esac
             ;;
+	  gthread2)
+            LV_THREAD_LIBS="$GTHREAD2_LIBS"
+            ;;
           *)
-	    # This is not possible!
             ;;
   esac
 else
@@ -273,6 +308,23 @@ fi
 
 AC_MSG_CHECKING(thread related libraries)
 AC_MSG_RESULT($LV_THREAD_LIBS)
+AC_SUBST(LV_THREAD_LIBS)
+
+dnl --------------------------------------------------
+dnl Determination of compiler flags for thread support
+dnl --------------------------------------------------
+
+LV_THREAD_CFLAGS=""
+if test "x$enable_threads" = xyes && test "x$have_threads" != xnone; then
+  case $have_threads in
+	  gthread2)
+            LV_THREAD_CFLAGS="$GTHREAD2_CFLAGS"
+            ;;
+          *)
+	    ;;
+  esac
+fi
+AC_SUBST(LV_THREAD_CFLAGS)
 
 # check for type sizes
 AC_CHECK_SIZEOF(short)
@@ -300,8 +352,18 @@ esac
 AC_MSG_RESULT(unsigned $visual_size_type)
 
 build_subdirs="libvisual"
+
+VISUAL_PKG_CONFIG_DEP=""
+
 VISUAL_CFLAGS=""
-VISUAL_LIBS="$LIBS -lvisual"
+if test x"$LV_THREAD_CFLAGS" == xgthread2; then
+  VISUAL_PKG_CONFIG_DEP="$VISUAL_PKG_CONFIG_DEP gthread-2.0"
+elif test x"$LV_THREAD_CFLAGS" != x; then
+  VISUAL_CFLAGS=$LV_THREAD_CFLAGS
+fi
+AC_SUBST(VISUAL_PKG_CONFIG_DEP)
+
+VISUAL_LIBS="$LIBS -lvisual-${LIBVISUAL_VERSION_SUFFIX}"
 if test x"$LV_THREAD_LIBS" != x; then
   VISUAL_LIBS="$LV_THREAD_LIBS $VISUAL_LIBS"
 fi
@@ -321,7 +383,7 @@ AC_ARG_ENABLE([profiling],
 		[Enable emision of profile data to be used by gprof @<:@default=disabled@:>@]),
 		[profiling=$enableval],
 		[profiling=no])
-AC_MSG_CHECKING([wheter to enable profiling])
+AC_MSG_CHECKING([whether to enable profiling])
 if test x$profiling = xyes; then
   AC_MSG_RESULT([yes])
   if test x"$GCC" = xyes; then
@@ -338,7 +400,7 @@ AC_ARG_ENABLE([debug],
                            [Enable debug @<:@default=disabled@:>@]),
 	    [debug=$enableval],
 	    [debug=no])
-AC_MSG_CHECKING([wheter to enable debug])
+AC_MSG_CHECKING([whether to enable debug])
 if test x$debug = xyes; then
   AC_MSG_RESULT([yes])
   if test x"$GCC" = xyes; then
@@ -347,7 +409,7 @@ if test x$debug = xyes; then
   # IMHO -Werror should be here also. --VVB
     lv_save_CFLAGS=$CFLAGS
     CFLAGS="$CFLAGS -Wno-unused-variable"
-    AC_MSG_CHECKING([wheter gcc version is greater than 2.95])
+    AC_MSG_CHECKING([whether gcc version is greater than 2.95])
     AC_TRY_COMPILE([#include <stdlib.h>],
 		   [exit(0);],
 		   [lv_gcc_gt_2_95=yes],
@@ -370,7 +432,7 @@ AC_ARG_ENABLE([extra-optimization],
                           [Enable extra optimizations @<:@default=disabled@:>@]),
            [extra_opt=$enableval],
            [extra_opt=no])
-AC_MSG_CHECKING([wheter to enable extra optimizations])
+AC_MSG_CHECKING([whether to enable extra optimizations])
 if test x$extra_opt = xyes; then
   AC_MSG_RESULT([yes])
   if test x"$GCC" = xyes; then
@@ -392,7 +454,7 @@ AC_ARG_ENABLE([fast-fp-rng],
                           [Enable faster random floating point generator (enabled by default if --enable-extra-optimization is passed) ]),
            [fastfprng=$enableval],
            [fastfprng=maybe])
-AC_MSG_CHECKING([wheter to enable fast FP RNG])
+AC_MSG_CHECKING([whether to enable fast FP RNG])
 
 if  test x$fastfprng = xyes; then
   AC_MSG_RESULT([yes])
@@ -412,6 +474,9 @@ fi
 
 #define VISUAL_RANDOM_FAST_FP_RND 1
 
+if test x$lv_mingw = xyes ; then
+OPT_CFLAGS="-mwindows"
+fi
 AC_SUBST(OPT_CFLAGS)
 
 AC_SUBST(CFLAGS, "${CFLAGS} ${DEBUG_CFLAGS} ${OPT_CFLAGS}")
@@ -419,9 +484,10 @@ AC_SUBST(CFLAGS, "${CFLAGS} ${DEBUG_CFLAGS} ${OPT_CFLAGS}")
 libs_dynamic_loader="-ldl"
 AC_SUBST(LIBS_DYNAMIC_LOADER, "$libs_dynamic_loader")
 
-AC_SUBST(BUILD_SUBDIRS, "libvisual")
-
-LIBVISUAL_PLUGINS_BASE_DIR="${libdir}/libvisual"
+dnl Installation paths
+LIBVISUAL_INCLUDE_DIR="${includedir}/libvisual-${LIBVISUAL_VERSION_SUFFIX}"
+LIBVISUAL_PLUGINS_BASE_DIR="${libdir}/libvisual-${LIBVISUAL_VERSION_SUFFIX}"
+AC_SUBST(LIBVISUAL_INCLUDE_DIR)
 AC_SUBST(LIBVISUAL_PLUGINS_BASE_DIR)
 
 dnl Output the LibVisual config file
@@ -514,6 +580,13 @@ _______EOF
                 cat >>$outfile <<_______EOF
 
 #define VISUAL_ARCH_X86
+_______EOF
+        fi
+
+        if test x$lv_x86_64 = xyes ; then
+                cat >>$outfile <<_______EOF
+
+#define VISUAL_ARCH_X86_64
 _______EOF
         fi
 
@@ -674,6 +747,11 @@ _______EOF
 #define VISUAL_THREAD_MODEL_DCE
 _______EOF
 				;;
+			gthread2)
+				cat >>$outfile <<_______EOF
+#define VISUAL_THREAD_MODEL_GTHREAD2
+_______EOF
+				;;
 			*)
 				;;
 		esac
@@ -738,6 +816,8 @@ esac
 ])
 				    
 AC_CONFIG_FILES([
+m4/Makefile
+po/Makefile.in
 Makefile
 libvisual.pc
 libvisual/Makefile
@@ -750,7 +830,7 @@ libvisual/Makefile
 
 AC_OUTPUT
 
-plugins_base_dir=`eval echo \`eval echo $LIBVISUAL_PLUGINS_BASE_DIR\``
+plugins_base_dir=`eval echo \`eval echo ${LIBVISUAL_PLUGINS_BASE_DIR}\``
 
 echo "
 =====================================================================
@@ -758,8 +838,7 @@ LIBVISUAL, AN AUDIO VISUALISATION ABSTRACTION LIBRARY, VERSION $VERSION
 =====================================================================
 
 install path                         : ${prefix}/lib
-plugins base dir                     : $plugins_base_dir
+plugins base directory               : $plugins_base_dir
 compiler                             : ${CC}
 debug enabled                        : ${debug}
 "
-

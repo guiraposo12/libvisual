@@ -5,8 +5,12 @@ Developers:
 Duilio J. Protti <dprotti@users.sourceforge.net>
 Vitaly V. Bursov <vitalyvb@ukr.net>
 Gustavo Sverzut Barbieri <gsbarbieri@yahoo.com.br>
+Jaak Randmets <jaak.ra@gmail.com>
 
-The FFT implementation used by libvisual:
+The new FFT implementation that is used by libvisual is written by:
+Chong Kai Xiong <descender@phreaker.net>
+
+The old FFT implementation that was used by libvisual:
 Richard Boulton <richard@tartarus.org>
 
 Nearest scalers, initial VisCPU stuff:

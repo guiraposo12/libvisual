@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_mem.h,v 1.20 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -26,18 +26,66 @@
 
 #include <libvisual/lvconfig.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+#include <libvisual/lv_defines.h>
 
-#ifndef __attribute_malloc__
-#define __attribute_malloc__
-#endif
-	
-void *visual_mem_malloc0 (visual_size_t nbytes) __attribute_malloc__;
+VISUAL_BEGIN_DECLS
+
+/**
+ * The visual_mem_copy function needs this signature.
+ *
+ * @arg dest Pointer to the dest buffer.
+ * @arg src Pointer to the source buffer.
+ * @arg n The number of bytes to be copied.
+ *
+ * @return Pointer to the dest buffer.
+ */
+typedef void *(*VisMemCopyFunc)(void *dest, const void *src, visual_size_t n);
+
+/**
+ * The visual_mem_set function needs this signature.
+ *
+ * @arg dest Pointer to the dest buffer.
+ * @arg c Value that is used as the set value.
+ * @arg n The number of bytes to be set.
+ *
+ * @return Pointer to the dest buffer.
+ */
+typedef void *(*VisMemSet8Func)(void *dest, int c, visual_size_t n);
+
+/**
+ * The visual_mem_set16 function needs this signature.
+ *
+ * @arg dest Pointer to the dest buffer.
+ * @arg c Value that is used as the set value.
+ * @arg n The number of words (16bits) to be set.
+ *
+ * @return Pointer to the dest buffer.
+ */
+typedef void *(*VisMemSet16Func)(void *dest, int c, visual_size_t n);
+
+/**
+ * The visual_mem_set32 function needs this signature.
+ *
+ * @arg dest Pointer to the dest buffer.
+ * @arg c Value that is used as the set value.
+ * @arg n The number of integers (32bits) to be set.
+ *
+ * @return Pointer to the dest buffer.
+ */
+typedef void *(*VisMemSet32Func)(void *dest, int c, visual_size_t n);
+
+/* prototypes */
+int visual_mem_initialize (void);
+void *visual_mem_malloc (visual_size_t nbytes) __malloc;
+void *visual_mem_malloc0 (visual_size_t nbytes) __malloc;
+void *visual_mem_realloc (void *ptr, visual_size_t nbytes) __malloc;
 int visual_mem_free (void *ptr);
 
-void *visual_mem_copy (void *dest, const void *src, size_t n);
+/* Optimal performance functions set by visual_mem_initialize(). */
+extern VisMemCopyFunc visual_mem_copy;
+extern VisMemSet8Func visual_mem_set;
+extern VisMemSet16Func visual_mem_set16;
+extern VisMemSet32Func visual_mem_set32;
 
 /**
  * @ingroup VisMem
@@ -48,8 +96,6 @@ void *visual_mem_copy (void *dest, const void *src, size_t n);
 #define visual_mem_new0(struct_type, n_structs)           \
     ((struct_type *) visual_mem_malloc0 (((visual_size_t) sizeof (struct_type)) * ((visual_size_t) (n_structs))))
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+VISUAL_END_DECLS
 
 #endif /* _LV_MEM_H */

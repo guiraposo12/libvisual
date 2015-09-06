@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_object.c,v 1.12 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -27,6 +27,8 @@
 #include <string.h>
 
 #include "lv_log.h"
+#include "lv_error.h"
+#include "lv_mem.h"
 #include "lv_object.h"
 
 
@@ -39,13 +41,15 @@
  * This function is a global VisListDestroyerFunc handler that unrefs VisObjects.
  *
  * @param data Pointer to the VisObject that needs to be unrefed
+ *
+ * @return VISUAL_OK on succes, or error failures by visual_object_unref() on failure.
  */
-void visual_object_list_destroyer (void *data)
+int visual_object_collection_destroyer (void *data)
 {
 	if (data == NULL)
-		return;
+		return VISUAL_OK;
 
-	visual_object_unref (VISUAL_OBJECT (data));
+	return visual_object_unref (VISUAL_OBJECT (data));
 }
 
 /**
@@ -120,10 +124,83 @@ int visual_object_initialize (VisObject *object, int allocated, VisObjectDtorFun
 {
 	visual_log_return_val_if_fail (object != NULL, -VISUAL_ERROR_OBJECT_NULL);
 
-	object->allocated = allocated;
-	object->dtor = dtor;
+	visual_object_set_dtor (object, dtor);
+	visual_object_set_allocated (object, allocated);
+
+	visual_object_clear (object);
 
 	visual_object_ref (object);
+
+	return VISUAL_OK;
+}
+
+/**
+ * Clears a VisObject. This basically means setting it's private to NULL and it's refcount to 0. This won't unref, or destroy
+ * the object and this function is mostly used for object creation.
+ *
+ * @param object Pointer to a VisObject that is to be cleared.
+ *
+ * @return VISUAL_OK on succes, -VISUAL_ERROR_OBJECT_NULL on failure.
+ */
+int visual_object_clear (VisObject *object)
+{
+	visual_log_return_val_if_fail (object != NULL, -VISUAL_ERROR_OBJECT_NULL);
+
+	visual_object_set_private (object, NULL);
+	visual_object_set_refcount (object, 0);
+
+	return VISUAL_OK;
+}
+
+/**
+ * Sets the destructor function to a VisObject.
+ *
+ * @param object pointer to a VisObject to which the destructor function is set.
+ * @param dtor The Destructor function, that is used to destroy the VisObject when it loses all references or when it's
+ *	being destroyed.
+ *
+ * @return VISUAL_OK on succes, -VISUAL_ERROR_OBJECT_NULL on failure.
+ */
+int visual_object_set_dtor (VisObject *object, VisObjectDtorFunc dtor)
+{
+	visual_log_return_val_if_fail (object != NULL, -VISUAL_ERROR_OBJECT_NULL);
+
+	object->dtor = dtor;
+
+	return VISUAL_OK;
+}
+
+/**
+ * Sets whether a VisObject is allocated or not. This is used when a VisObject is unreffed. If it's
+ * allocated it will get freed, if not, only the dtor gets called to cleanup the inside of the VisObject.
+ * 
+ * @param object pointer to a VisObject to which the destructor function is set.
+ * @param allocated Boolean whether a VisObject is allocated or not.
+ * 
+ * @return VISUAL_OK on succes, -VISUAL_ERROR_OBJECT_NULL on failure.
+ */
+int visual_object_set_allocated (VisObject *object, int allocated)
+{
+	visual_log_return_val_if_fail (object != NULL, -VISUAL_ERROR_OBJECT_NULL);
+
+	object->allocated = allocated;
+
+	return VISUAL_OK;
+}
+
+/**
+ * Sets the refcount to a certain number. Mostly used in VisObject initialization.
+ *
+ * @param object Pointer to a VisObject to which the refcount is set.
+ * @param refcount The value for the VisObject it's refcount.
+ *
+ * @return VISUAL_OK on succes, -VISUAL_ERROR_OBJECT_NULL on failure.
+ */
+int visual_object_set_refcount (VisObject *object, int refcount)
+{
+	visual_log_return_val_if_fail (object != NULL, -VISUAL_ERROR_OBJECT_NULL);
+
+	object->refcount = refcount;
 
 	return VISUAL_OK;
 }
@@ -138,7 +215,7 @@ int visual_object_initialize (VisObject *object, int allocated, VisObjectDtorFun
 int visual_object_ref (VisObject *object)
 {
 	visual_log_return_val_if_fail (object != NULL, -VISUAL_ERROR_OBJECT_NULL);
-	
+
 	object->refcount++;
 
 	return VISUAL_OK;
@@ -158,7 +235,7 @@ int visual_object_ref (VisObject *object)
 int visual_object_unref (VisObject *object)
 {
 	visual_log_return_val_if_fail (object != NULL, -VISUAL_ERROR_OBJECT_NULL);
-	
+
 	object->refcount--;
 
 	/* No reference left, start dtoring of this VisObject */
@@ -182,6 +259,9 @@ int visual_object_set_private (VisObject *object, void *priv)
 {
 	visual_log_return_val_if_fail (object != NULL, -VISUAL_ERROR_OBJECT_NULL);
 
+	/* mhm, this can lead to a memory leak. We must check here
+	   for priv == NULL and return some -VISUAl_ERROR_NON_NULL
+	   when it's not, or print some debug message at least. */
 	object->priv = priv;
 
 	return VISUAL_OK;

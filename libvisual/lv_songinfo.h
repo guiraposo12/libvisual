@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_songinfo.h,v 1.14 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -27,12 +27,10 @@
 #include <libvisual/lv_time.h>
 #include <libvisual/lv_video.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+VISUAL_BEGIN_DECLS
 
-#define VISUAL_SONGINFO(obj)				(VISUAL_CHECK_CAST ((obj), 0, VisSongInfo))
-	
+#define VISUAL_SONGINFO(obj)				(VISUAL_CHECK_CAST ((obj), VisSongInfo))
+
 /**
  * Used to define the type of song info being used.
  * There are two interfaces to notify libvisual of song
@@ -65,7 +63,7 @@ struct _VisSongInfo {
 	/* Simple type */
 	char		*songname;	/**< A string containing the song name using
 					  * the simple interface. */
-	
+
 	/* Advanced type */
 	char		*artist;	/**< A string containing the artist name using
 					  * the advanced interface. */
@@ -82,7 +80,10 @@ struct _VisSongInfo {
 };
 
 VisSongInfo *visual_songinfo_new (VisSongInfoType type);
+int visual_songinfo_init (VisSongInfo *songinfo, VisSongInfoType type);
+
 int visual_songinfo_free_strings (VisSongInfo *songinfo);
+
 int visual_songinfo_set_type (VisSongInfo *songinfo, VisSongInfoType type);
 int visual_songinfo_set_length (VisSongInfo *songinfo, int length);
 int visual_songinfo_set_elapsed (VisSongInfo *songinfo, int elapsed);
@@ -91,13 +92,12 @@ int visual_songinfo_set_artist (VisSongInfo *songinfo, char *artist);
 int visual_songinfo_set_album (VisSongInfo *songinfo, char *album);
 int visual_songinfo_set_song (VisSongInfo *songinfo, char *song);
 int visual_songinfo_set_cover (VisSongInfo *songinfo, VisVideo *cover);
+
 int visual_songinfo_mark (VisSongInfo *songinfo);
 long visual_songinfo_age (VisSongInfo *songinfo);
 int visual_songinfo_copy (VisSongInfo *dest, VisSongInfo *src);
 int visual_songinfo_compare (VisSongInfo *s1, VisSongInfo *s2);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+VISUAL_END_DECLS
 
 #endif /* _LV_SONGINFO_H */

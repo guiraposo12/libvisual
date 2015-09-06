@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_types.h,v 1.11 2006/02/13 20:54:08 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -24,18 +24,25 @@
 #ifndef _LV_TYPES_H
 #define _LV_TYPES_H
 
+#include <libvisual/lv_defines.h>
+
+#if defined(VISUAL_OS_WIN32)
+#include <stdint.h>
+#else
 #include <sys/types.h>
+#endif /* !VISUAL_OS_WIN32 */
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+VISUAL_BEGIN_DECLS
 
-#define VISUAL_CHECK_CAST(uiobj, cast_type, cast)    ((cast*) (uiobj))
+#define VISUAL_CHECK_CAST(uiobj, cast)		((cast*) (uiobj))
 
+#define VISUAL_TABLESIZE(table)			(sizeof (table) / sizeof (table[0]))
+
+#if !defined(VISUAL_OS_WIN32)
 #ifndef uint8_t
 #define uint8_t		u_int8_t
 #endif
-	
+
 #ifndef uint16_t
 #define uint16_t	u_int16_t
 #endif
@@ -43,9 +50,8 @@ extern "C" {
 #ifndef uint32_t
 #define uint32_t	u_int32_t
 #endif
+#endif /* !VISUAL_OS_WIN32 */
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+VISUAL_END_DECLS
 
 #endif /* _LV_TYPES_H */

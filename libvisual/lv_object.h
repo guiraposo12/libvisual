@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_object.h,v 1.14 2006/01/23 21:06:24 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -24,13 +24,12 @@
 #ifndef _LV_OBJECT_H
 #define _LV_OBJECT_H
 
-#include <libvisual/lv_common.h>
+#include <libvisual/lv_defines.h>
+#include <libvisual/lv_types.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+VISUAL_BEGIN_DECLS
 
-#define VISUAL_OBJECT(obj)				(VISUAL_CHECK_CAST ((obj), 0, VisObject))
+#define VISUAL_OBJECT(obj)				(VISUAL_CHECK_CAST ((obj), VisObject))
 
 typedef struct _VisObject VisObject;
 
@@ -65,13 +64,17 @@ struct _VisObject {
 						 * depending on the sub class object. */
 };
 
-void visual_object_list_destroyer (void *data);
+int visual_object_collection_destroyer (void *data);
 
 VisObject *visual_object_new (void);
 int visual_object_free (VisObject *object);
 int visual_object_destroy (VisObject *object);
 
 int visual_object_initialize (VisObject *object, int allocated, VisObjectDtorFunc dtor);
+int visual_object_clear (VisObject *object);
+int visual_object_set_dtor (VisObject *object, VisObjectDtorFunc dtor);
+int visual_object_set_allocated (VisObject *object, int allocated);
+int visual_object_set_refcount (VisObject *object, int refcount);
 
 int visual_object_ref (VisObject *object);
 int visual_object_unref (VisObject *object);
@@ -79,8 +82,25 @@ int visual_object_unref (VisObject *object);
 int visual_object_set_private (VisObject *object, void *priv);
 void *visual_object_get_private (VisObject *object);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+/**
+ * @ingroup VisObject
+ *
+ * Macro that will set the data after the VisObject data to 0.
+ */
+#define visual_object_clean(object, struct_type)	\
+	visual_mem_set ((uint8_t *) (object) + sizeof (VisObject), 0, sizeof (struct_type) - sizeof (VisObject))
+
+/**
+ * @ingroup VisObject
+ *
+ * Macro that will copy the data after the VisObject data to another VisObject.
+ */
+#define visual_object_copy_data(dest, src, struct_type)			\
+	visual_mem_copy ((uint8_t *) (dest) + sizeof (VisObject),	\
+			(uint8_t *) (src) + sizeof (VisObject),		\
+			sizeof (struct_type) - sizeof (VisObject))
+
+
+VISUAL_END_DECLS
 
 #endif /* _LV_OBJECT_H */

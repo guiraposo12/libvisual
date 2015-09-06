@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: libvisual.h,v 1.23 2006/01/22 13:23:36 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -26,10 +26,11 @@
 
 #include <libvisual/lvconfig.h>
 
-#include <libvisual/lv_endianess.h>
+#include <libvisual/lv_bits.h>
 #include <libvisual/lv_time.h>
 #include <libvisual/lv_color.h>
 #include <libvisual/lv_param.h>
+#include <libvisual/lv_config.h>
 #include <libvisual/lv_cpu.h>
 #include <libvisual/lv_bin.h>
 #include <libvisual/lv_event.h>
@@ -37,7 +38,7 @@
 #include <libvisual/lv_actor.h>
 #include <libvisual/lv_input.h>
 #include <libvisual/lv_audio.h>
-#include <libvisual/lv_fft.h>
+#include <libvisual/lv_fourier.h>
 #include <libvisual/lv_list.h>
 #include <libvisual/lv_palette.h>
 #include <libvisual/lv_plugin.h>
@@ -50,10 +51,19 @@
 #include <libvisual/lv_log.h>
 #include <libvisual/lv_random.h>
 #include <libvisual/lv_ui.h>
+#include <libvisual/lv_collection.h>
+#include <libvisual/lv_hashmap.h>
+#include <libvisual/lv_cache.h>
+#include <libvisual/lv_ringbuffer.h>
+#include <libvisual/lv_rectangle.h>
 #include <libvisual/lv_error.h>
 #include <libvisual/lv_thread.h>
 #include <libvisual/lv_object.h>
 #include <libvisual/lv_types.h>
+#include <libvisual/lv_utils.h>
+#include <libvisual/lv_gl.h>
+#include <libvisual/lv_math.h>
+#include <libvisual/lv_os.h>
 #include <libvisual/lv_common.h>
 
 #endif /* LV_LIBVISUAL_H */

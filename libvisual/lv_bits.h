@@ -1,10 +1,10 @@
 /* Libvisual - The audio visualisation framework.
  * 
- * Copyright (C) 2004, 2005 Dennis Smit <ds@nerds-incorporated.org>
+ * Copyright (C) 2004, 2005, 2006 Dennis Smit <ds@nerds-incorporated.org>
  *
  * Authors: Dennis Smit <ds@nerds-incorporated.org>
  *
- * $Id:
+ * $Id: lv_bits.h,v 1.3 2006/01/22 13:23:37 synap Exp $
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -25,10 +25,9 @@
 #define _LV_ENDIANESS_H
 
 #include <libvisual/lvconfig.h>
+#include <libvisual/lv_defines.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+VISUAL_BEGIN_DECLS
 
 /**
  * Macros to convert LE <-> BE
@@ -67,9 +66,12 @@ extern "C" {
 #	define VISUAL_ENDIAN_BEI32(x) VISUAL_ENDIAN_LE_BE_I32(x)
 #endif
 
+/**
+ * Macro to check if 'x' is aligned on 'y' bytes. This macro will fail
+ * when supplied with '1'. However you wouldn't want to do that anyway.
+ */
+#define VISUAL_ALIGNED(x, y)	(!(((unsigned long) x) & (y - 1)))
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */   
+VISUAL_END_DECLS
 
 #endif /* _LV_ENDIANESS_H */
