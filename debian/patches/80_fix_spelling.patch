@@ -1,0 +1,16 @@
+Description: fix a spelling error in final binary.
+Author: Joao Eriberto Mota Filho <eriberto@debian.org>
+Last-Update: 2016-10-09
+Index: libvisual-0.4.0/libvisual/lv_error.c
+===================================================================
+--- libvisual-0.4.0.orig/libvisual/lv_error.c
++++ libvisual-0.4.0/libvisual/lv_error.c
+@@ -198,7 +198,7 @@ static const char *__lv_error_human_read
+ 	[VISUAL_ERROR_VIDEO_INVALID_SCALE_METHOD] =	N_("Invalid scale method given"),
+ 	[VISUAL_ERROR_VIDEO_INVALID_ROTATE] =		N_("Invalid rotate degrees given"),
+ 	[VISUAL_ERROR_VIDEO_OUT_OF_BOUNDS] =		N_("Given coordinates are out of bounds"),
+-	[VISUAL_ERROR_VIDEO_NOT_INDENTICAL] =		N_("Given VisVideos are not indentical"),
++	[VISUAL_ERROR_VIDEO_NOT_INDENTICAL] =		N_("Given VisVideos are not identical"),
+ 	[VISUAL_ERROR_VIDEO_NOT_TRANSFORMED] =		N_("VisVideo is not depth transformed as requested")
+ };
+ 

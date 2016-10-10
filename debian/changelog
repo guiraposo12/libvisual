@@ -1,3 +1,17 @@
+libvisual (0.4.0-9) unstable; urgency=medium
+
+  * Bumped DH level to 10.
+  * debian/control:
+      - Bumped Standards-Version to 3.9.8.
+      - Updated the Vcs-* fields to use https instead of http and git.
+  * debian/copyright: updated the packaging copyright years.
+  * debian/patches/:
+      - Added the .patch suffix to all patches.
+      - Added 80_fix_spelling.patch to fix a spelling error in final binary.
+  * debian/watch: bumped to version 4.
+
+ -- Joao Eriberto Mota Filho <eriberto@debian.org>  Mon, 10 Oct 2016 01:42:23 +0000
+
 libvisual (0.4.0-8) unstable; urgency=medium
 
   * Upload to unstable.
