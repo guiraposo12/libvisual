@@ -1,3 +1,9 @@
+libvisual (0.4.0-10) unstable; urgency=medium
+
+  * debian/copyright: little adjustment around the main upstream email address.
+
+ -- Joao Eriberto Mota Filho <eriberto@debian.org>  Sat, 12 Nov 2016 20:15:03 -0200
+
 libvisual (0.4.0-9) unstable; urgency=medium
 
   * Bumped DH level to 10.
