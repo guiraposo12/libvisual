@@ -1,3 +1,20 @@
+libvisual (0.4.0-11) unstable; urgency=medium
+
+  * debian/control:
+      - Added a Multi-Arch field. Thanks to Francois Gouget <fgouget@free.fr>
+        and Manuel A. Fernandez Montecelo" <manuel.montezelo@gmail.com>.
+        (Closes: #862264)
+      - Bumped Standards-Version to 4.1.1.
+      - Removed no longer needed build dependency dh-autoreconf.
+  * debian/copyright: updated packaging copyright years.
+  * debian/patches/90_update-DE-translation.patch: updates the German
+    translation provided by 60_add_german_translation.patch. The same author
+    for both patches. So, thanks again to Chris Leick <c.leick@vollbio.de>.
+    (Closes: #871838)
+  * debian/source/options: updated to allow changes in all .gmo files.
+
+ -- Joao Eriberto Mota Filho <eriberto@debian.org>  Sat, 11 Nov 2017 16:51:31 -0200
+
 libvisual (0.4.0-10) unstable; urgency=medium
 
   * debian/copyright: little adjustment around the main upstream email address.
@@ -115,7 +132,7 @@ libvisual (0.4.0-3) unstable; urgency=low
 
   * Acknowledge NMU for lv_cpu.c fix. Thanks
   * Fixed Maintainer field email address
-  * Updated Packaging to source 3.0 (quilt) format and 
+  * Updated Packaging to source 3.0 (quilt) format and
     Moved direct source edits from NMU to patches.
   * Added patch from Ubuntu for inline redefine fix.
   * Very old config.sub and config.guess replaced

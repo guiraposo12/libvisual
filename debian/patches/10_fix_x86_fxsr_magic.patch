@@ -2,11 +2,11 @@ Description: fix for X86_FXSR_MAGIC. (Closes: #456856, #608784)
 Author: Pierre Habouzit <madcoder@debian.org>
 Reviewed-by: Steve Langasek <vorlon@debian.org>
 Last-Update: 2011-10-26
-Index: b/libvisual/lv_cpu.c
+Index: libvisual-0.4.0/libvisual/lv_cpu.c
 ===================================================================
---- a/libvisual/lv_cpu.c
-+++ b/libvisual/lv_cpu.c
-@@ -76,7 +76,7 @@
+--- libvisual-0.4.0.orig/libvisual/lv_cpu.c
++++ libvisual-0.4.0/libvisual/lv_cpu.c
+@@ -76,7 +76,7 @@ static int cpuid (unsigned int ax, unsig
  
  /* The sigill handlers */
  #if defined(VISUAL_ARCH_X86) //x86 (linux katmai handler check thing)
@@ -15,7 +15,7 @@ Index: b/libvisual/lv_cpu.c
  static void sigill_handler_sse( int signal, struct sigcontext sc )
  {
  	/* Both the "xorps %%xmm0,%%xmm0" and "divps %xmm0,%%xmm1"
-@@ -109,7 +109,7 @@
+@@ -109,7 +109,7 @@ static void sigfpe_handler_sse( int sign
  	}
  }
  #endif
@@ -24,7 +24,7 @@ Index: b/libvisual/lv_cpu.c
  
  #if defined(VISUAL_OS_WIN32)
  LONG CALLBACK win32_sig_handler_sse(EXCEPTION_POINTERS* ep)
-@@ -143,6 +143,7 @@
+@@ -143,6 +143,7 @@ static void sigill_handler (int sig)
  
  static void check_os_altivec_support( void )
  {

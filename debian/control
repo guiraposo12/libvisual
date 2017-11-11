@@ -2,15 +2,16 @@ Source: libvisual
 Section: devel
 Priority: optional
 Maintainer: Joao Eriberto Mota Filho <eriberto@debian.org>
-Build-Depends: debhelper (>= 10), dh-autoreconf, autopoint, pkg-config
+Build-Depends: debhelper (>= 10), autopoint, pkg-config
 Homepage: http://sf.net/projects/libvisual
-Standards-Version: 3.9.8
+Standards-Version: 4.1.1
 Vcs-Browser: https://anonscm.debian.org/git/collab-maint/libvisual.git
 Vcs-Git: https://anonscm.debian.org/git/collab-maint/libvisual.git
 
 Package: libvisual-0.4-dev
 Section: libdevel
 Architecture: any
+Multi-Arch: same
 Depends: ${misc:Depends},
          libvisual-0.4-0 (= ${binary:Version}),
          libc6-dev | libc-dev,

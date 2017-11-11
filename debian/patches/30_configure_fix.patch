@@ -1,9 +1,11 @@
 Description: fix for gettext version in configure script.
 Author: Brandon Holtsclaw <me@brandonholtsclaw.com>
 Last-Update: 2010-05-02
---- ../configure.ac	2006-02-20 06:43:49.000000000 -0600
-+++ configure.ac	2010-05-02 06:55:44.289738622 -0500
-@@ -155,7 +155,7 @@
+Index: libvisual-0.4.0/configure.ac
+===================================================================
+--- libvisual-0.4.0.orig/configure.ac
++++ libvisual-0.4.0/configure.ac
+@@ -155,7 +155,7 @@ AC_SUBST(GETTEXT_PACKAGE)
  AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [GETTEXT package name])
  AC_DEFINE_UNQUOTED(LOCALEDIR, "${prefix}/share/locale", [String catalog location])
  AM_GNU_GETTEXT([external])
