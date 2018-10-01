@@ -2,6 +2,7 @@ libvisual (0.4.0-12) UNRELEASED; urgency=medium
 
   * d/copyright: Use https protocol in Format field
   * d/control: Set Vcs-* to salsa.debian.org
+  * d/watch: Use https protocol
 
  -- Ondřej Nový <onovy@debian.org>  Mon, 01 Oct 2018 09:36:13 +0200
 

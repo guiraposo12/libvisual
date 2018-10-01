@@ -1,2 +1,2 @@
 version=4
-http://sf.net/libvisual/libvisual-(\d\S+)\.tar\.(?:bz2|gz|xz)
+https://sf.net/libvisual/libvisual-(\d\S+)\.tar\.(?:bz2|gz|xz)
