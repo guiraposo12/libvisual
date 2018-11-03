@@ -6,6 +6,7 @@ libvisual (0.4.0-12) unstable; urgency=medium
   * debian/copyright:
       - Added rights for Ondřej Nový.
       - Updated packaging copyright years.
+  * debian/patches/95_fix-FTCBFS.patch: added to avoid a FTCBFS. (see #884798)
   * debian/tests/*: added to perform a trivial test.
 
   [ Ondřej Nový ]

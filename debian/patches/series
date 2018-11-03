@@ -7,3 +7,4 @@
 70_fix_some_GCC_warnings.patch
 80_fix_spelling.patch
 90_update-DE-translation.patch
+95_fix-FTCBFS.patch

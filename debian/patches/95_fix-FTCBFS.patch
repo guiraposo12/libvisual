@@ -1,0 +1,14 @@
+Description: fix a FTCBFS caused by old AC_PATH_PROG. (see #884798)
+Author: Joao Eriberto Mota Filho <eriberto@debian.org>
+Last-Update: 2018-11-03
+--- libvisual-0.4.0.orig/configure.ac
++++ libvisual-0.4.0/configure.ac
+@@ -98,7 +98,7 @@ AC_LIBTOOL_WIN32_DLL
+ AC_LIBTOOL_DLOPEN
+ AC_PROG_LIBTOOL
+ 
+-AC_PATH_PROG(PKG_CONFIG, [pkg-config], [no])
++PKG_PROG_PKG_CONFIG
+ if test x$PKG_CONFIG = xno ; then
+   AC_MSG_WARN([*** pkg-config not found. See http://www.freedesktop.org/software/pkgconfig/.
+ 	       *** You will need pkg-config to compile against Libvisual Library])
