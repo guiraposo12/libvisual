@@ -1,7 +1,9 @@
 libvisual (0.4.0-12) unstable; urgency=medium
 
   [ Joao Eriberto Mota Filho ]
-  * 
+  * debian/copyright:
+      - Added rights for Ondřej Nový.
+      - Updated packaging copyright years.
 
   [ Ondřej Nový ]
   * debian/copyright: Use https protocol in Format field.
