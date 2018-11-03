@@ -1,10 +1,14 @@
-libvisual (0.4.0-12) UNRELEASED; urgency=medium
+libvisual (0.4.0-12) unstable; urgency=medium
 
-  * d/copyright: Use https protocol in Format field
-  * d/control: Set Vcs-* to salsa.debian.org
-  * d/watch: Use https protocol
+  [ Joao Eriberto Mota Filho ]
+  * 
 
- -- Ondřej Nový <onovy@debian.org>  Mon, 01 Oct 2018 09:36:13 +0200
+  [ Ondřej Nový ]
+  * debian/copyright: Use https protocol in Format field.
+  * debian/control: Set Vcs-* to salsa.debian.org.
+  * debian/watch: Use https protocol.
+
+ -- Joao Eriberto Mota Filho <eriberto@debian.org>  Fri, 02 Nov 2018 23:50:22 -0300
 
 libvisual (0.4.0-11) unstable; urgency=medium
 
