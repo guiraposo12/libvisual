@@ -1,6 +1,8 @@
 libvisual (0.4.0-12) unstable; urgency=medium
 
   [ Joao Eriberto Mota Filho ]
+  * Migrated DH level to 11.
+  * debian/control: bumped Standards-Version to 4.2.1.
   * debian/copyright:
       - Added rights for Ondřej Nový.
       - Updated packaging copyright years.
