@@ -1,0 +1,2 @@
+Test-Command: g++ debian/tests/test.cpp -o test; ./test
+Depends: @, g++

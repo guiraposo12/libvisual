@@ -6,6 +6,7 @@ libvisual (0.4.0-12) unstable; urgency=medium
   * debian/copyright:
       - Added rights for Ondřej Nový.
       - Updated packaging copyright years.
+  * debian/tests/*: added to perform a trivial test.
 
   [ Ondřej Nový ]
   * debian/copyright: Use https protocol in Format field.
@@ -214,4 +215,3 @@ libvisual (0.2.0-1) unstable; urgency=low
   * New package
 
  -- David Schleef <ds@schleef.org>  Wed, 22 Jun 2005 16:03:26 -0700
-
