@@ -11,7 +11,6 @@ Vcs-Git: https://salsa.debian.org/debian/libvisual.git
 Package: libvisual-0.4-dev
 Section: libdevel
 Architecture: any
-Multi-Arch: same
 Depends: ${misc:Depends},
          libvisual-0.4-0 (= ${binary:Version}),
          libc6-dev | libc-dev,

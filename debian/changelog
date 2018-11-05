@@ -1,5 +1,8 @@
 libvisual (0.4.0-13) unstable; urgency=medium
 
+  * debian/control: removed 'Multi-Arch: same' from libvisual-0.4-dev binary to
+    fix a multiarch conflict for lvconfig.h file over several architectures. For
+    details, see https://wiki.debian.org/MultiArch/Hints#file-conflict
   * debian/libvisual-0.4-dev.install: fixed the path for include/ directory.
     The last debian/tests/test.cpp file shown a packaging error.
   * debian/libvisual-0.4-0.symbols: added Build-Depends-Package field.
