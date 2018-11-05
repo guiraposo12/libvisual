@@ -1,0 +1,10 @@
+libvisual for Debian
+--------------------
+
+Setting 'Multi-Arch: same' for libvisual-0.4-dev will generate a file
+conflict[1] for lvconfig.h in several architectures. So, is recommended
+not set Multi-Arch for libvisual-0.4-dev.
+
+[1] https://wiki.debian.org/MultiArch/Hints#file-conflict
+
+ -- Joao Eriberto Mota Filho <eriberto@debian.org>  Sun, 04 Nov 2018 22:13:39 -0200
