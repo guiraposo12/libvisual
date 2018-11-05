@@ -1,6 +1,9 @@
 libvisual (0.4.0-13) unstable; urgency=medium
 
   * debian/libvisual-0.4-dev.install: fixed the path for include/ directory.
+    The last debian/tests/test.cpp file shown a packaging error.
+  * debian/tests/test.cpp: using libvisual.h in test to get more comprehensive
+    results.
 
  -- Joao Eriberto Mota Filho <eriberto@debian.org>  Sun, 04 Nov 2018 22:13:39 -0200
 

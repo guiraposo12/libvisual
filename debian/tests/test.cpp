@@ -1,4 +1,4 @@
-#include <libvisual-0.4/libvisual/lvconfig.h>
+#include <libvisual/libvisual.h>
 #include <cstdio>
 
 int main()
