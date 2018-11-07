@@ -1,8 +1,8 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: Libvisual
 Upstream-Contact: Dennis Smit <ds@nerds-incorporated.org, synap@users.sf.net>
-Source: http://sf.net/projects/libvisual
-Comment: see also: https://github.com/Libvisual/libvisual
+Source: https://github.com/Libvisual/libvisual
+Comment: see also: http://libvisual.org and http://sf.net/projects/libvisual
 
 Files: *
 Copyright: 2002-2004 Sepp Wijnands <mrrazz@nerds-incorporated.org,
