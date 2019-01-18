@@ -4,6 +4,7 @@ libvisual (0.4.0-15) unstable; urgency=medium
       - debian/compat: removed.
       - debian/control: changed from 'debhelper' to 'debhelper-compat' in
         Build-Depends field.
+  * debian/control: bumped Standards-Version to 4.3.0.
   * debian/libvisual-0.4-dev.install: reverted the path for include/ directory.
     I will use a symlink to fix the problem pointed in 0.4.0-13 revision. Thanks
     to Tim Müller <t.i.m@zen.co.uk>. (Closes: #917898)
