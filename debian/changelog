@@ -1,6 +1,8 @@
 libvisual (0.4.0-15) unstable; urgency=medium
 
-  *
+  * debian/libvisual-0.4-dev.install: reverted the path for include/ directory.
+    I will use a symlink to fix the problem pointed in 0.4.0-13 revision. Thanks
+    to Tim Müller <t.i.m@zen.co.uk>. (Closes: #917898)
 
  -- Joao Eriberto Mota Filho <eriberto@debian.org>  Fri, 18 Jan 2019 00:28:02 -0200
 
