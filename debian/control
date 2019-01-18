@@ -2,7 +2,7 @@ Source: libvisual
 Section: devel
 Priority: optional
 Maintainer: Joao Eriberto Mota Filho <eriberto@debian.org>
-Build-Depends: debhelper (>= 11), autopoint, pkg-config
+Build-Depends: debhelper-compat (= 12), autopoint, pkg-config
 Homepage: http://libvisual.org
 Standards-Version: 4.2.1
 Vcs-Browser: https://salsa.debian.org/debian/libvisual
