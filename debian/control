@@ -4,8 +4,8 @@ Priority: optional
 Maintainer: Debian QA Group <packages@qa.debian.org>
 Build-Depends: debhelper-compat (= 12), autopoint, pkg-config
 Standards-Version: 4.5.0
-Rules-Requires-Root: no
 Homepage: http://libvisual.org
+Rules-Requires-Root: no
 Vcs-Browser: https://salsa.debian.org/debian/libvisual
 Vcs-Git: https://salsa.debian.org/debian/libvisual.git
 
