@@ -1,6 +1,6 @@
 libvisual (0.4.0-16) unstable; urgency=medium
 
-  * New changelog.
+  * QA upload.
   * Set Debian QA Group as maintainer. (see: #921622)
   * debian/control:
       - Added 'Rules-Requires-Root: no' to source stanza.
