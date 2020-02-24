@@ -1,7 +1,7 @@
 Source: libvisual
 Section: devel
 Priority: optional
-Maintainer: Joao Eriberto Mota Filho <eriberto@debian.org>
+Maintainer: Debian QA Group <packages@qa.debian.org>
 Build-Depends: debhelper-compat (= 12), autopoint, pkg-config
 Standards-Version: 4.5.0
 Rules-Requires-Root: no
