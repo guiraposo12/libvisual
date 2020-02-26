@@ -1,10 +1,10 @@
-libvisual (0.4.0-17) UNRELEASED; urgency=medium
+libvisual (0.4.0-17) unstable; urgency=medium
 
   * debian/tests/control:
     - Depends on build-essential instead of g++, the cross-test autopkgtest
       environment only knows how to handle the first one
 
- -- Sebastien Bacher <seb128@debian.org>  Wed, 26 Feb 2020 23:02:46 +0100
+ -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 26 Feb 2020 23:08:01 +0100
 
 libvisual (0.4.0-16) unstable; urgency=medium
 
