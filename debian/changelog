@@ -1,3 +1,14 @@
+libvisual (0.4.0-18) UNRELEASED; urgency=medium
+
+  * Set upstream metadata fields: Bug-Database, Bug-Submit, Repository,
+    Repository-Browse.
+  * Drop unnecessary dependency on dh-autoreconf.
+  * Update pattern for GitHub archive URLs from /<org>/<repo>/tags
+    page/<org>/<repo>/archive/<tag> -> /<org>/<repo>/archive/refs/tags/<tag>.
+  * Update standards version to 4.6.0, no changes needed.
+
+ -- Debian Janitor <janitor@jelmer.uk>  Tue, 22 Feb 2022 02:54:56 -0000
+
 libvisual (0.4.0-17) unstable; urgency=medium
 
   * debian/tests/control:

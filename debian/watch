@@ -1,2 +1,2 @@
 version=4
-https://github.com/Libvisual/libvisual/releases .*/archive/libvisual-plugins-(\d\S+)\.tar\.(?:bz2|gz|xz)
+https://github.com/Libvisual/libvisual/releases .*/archive/refs/tags/libvisual-plugins-(\d\S+)\.tar\.(?:bz2|gz|xz)
