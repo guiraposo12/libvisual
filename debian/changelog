@@ -4,6 +4,8 @@ libvisual (0.4.0-19) unstable; urgency=medium
   * debian/copyright:
       - Updated packaging copyright data.
       - Updated Upstream-Contact field.
+  * debian/watch: updated the search rule to make it compliant with new
+    standards of the GitHub.
 
  -- Joao Eriberto Mota Filho <eriberto@debian.org>  Tue, 06 Dec 2022 13:40:51 -0300
 
