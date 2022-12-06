@@ -2,6 +2,7 @@ libvisual (0.4.0-19) unstable; urgency=medium
 
   * QA upload.
   * debian/control:
+      - Bumped Standards-Version to 4.6.1.
       - Migrated DH level to 13.
   * debian/copyright:
       - Updated packaging copyright data.
