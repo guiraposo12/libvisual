@@ -8,7 +8,9 @@ libvisual (0.4.0-19) unstable; urgency=medium
       - Updated packaging copyright data.
       - Updated Upstream-Contact field.
   * debian/not-installed: created to declare libvisual-0.4.la.
-  * debian/patches/: added a leading '0' to each patch name.
+  * debian/patches/:
+      - Added a leading '0' to each patch name.
+      - Refreshed all patches.
   * debian/watch: updated the search rule to make it compliant with new
     standards of the GitHub.
 

@@ -1,8 +1,10 @@
 Description: fix a FTCBFS caused by old AC_PATH_PROG. (see #884798)
 Author: Joao Eriberto Mota Filho <eriberto@debian.org>
 Last-Update: 2018-11-03
---- libvisual-0.4.0.orig/configure.ac
-+++ libvisual-0.4.0/configure.ac
+Index: libvisual/configure.ac
+===================================================================
+--- libvisual.orig/configure.ac
++++ libvisual/configure.ac
 @@ -98,7 +98,7 @@ AC_LIBTOOL_WIN32_DLL
  AC_LIBTOOL_DLOPEN
  AC_PROG_LIBTOOL

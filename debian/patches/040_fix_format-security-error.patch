@@ -5,10 +5,10 @@ Description: fixes for -Werror=format-security.
  based on untrusted input, but we should clean up anyway.
 Author: Steve Langasek <vorlon@debian.org>
 Last-Update: 2011-10-26
-Index: libvisual-0.4.0/libvisual/lv_plugin.c
+Index: libvisual/libvisual/lv_plugin.c
 ===================================================================
---- libvisual-0.4.0.orig/libvisual/lv_plugin.c
-+++ libvisual-0.4.0/libvisual/lv_plugin.c
+--- libvisual.orig/libvisual/lv_plugin.c
++++ libvisual/libvisual/lv_plugin.c
 @@ -442,11 +442,11 @@ VisList *visual_plugin_registry_filter (
  				
  				visual_list_add (list, ref);

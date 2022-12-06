@@ -1,10 +1,10 @@
 Description: add German translation. (Closes: #509208)
 Author: Chris Leick <c.leick@vollbio.de>
 Last-Update: 2008-12-19
-Index: libvisual-0.4.0/po/de.po
+Index: libvisual/po/de.po
 ===================================================================
 --- /dev/null
-+++ libvisual-0.4.0/po/de.po
++++ libvisual/po/de.po
 @@ -0,0 +1,903 @@
 +# Translation of libvisual to German
 +# Copyright (C) Chris Leick <c.leick@vollbio.de>, 2008.
@@ -909,10 +909,10 @@ Index: libvisual-0.4.0/po/de.po
 +#: libvisual/lv_video.c:2775 libvisual/lv_video.c:2922
 +msgid "Invalid depth passed to the scaler"
 +msgstr "Ungültige Tiefe an Scaler übergeben"
-Index: libvisual-0.4.0/po/LINGUAS
+Index: libvisual/po/LINGUAS
 ===================================================================
---- libvisual-0.4.0.orig/po/LINGUAS
-+++ libvisual-0.4.0/po/LINGUAS
+--- libvisual.orig/po/LINGUAS
++++ libvisual/po/LINGUAS
 @@ -1,2 +1,2 @@
  # Set of available languages.
 -es_ES es_AR

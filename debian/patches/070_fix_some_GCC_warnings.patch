@@ -1,10 +1,10 @@
 Description: fix some GCC warnings.
 Author: Joao Eriberto Mota Filho <eriberto@debian.org>
 Last-Update: 2015-08-06
-Index: libvisual-0.4.0/libvisual/lv_math.c
+Index: libvisual/libvisual/lv_math.c
 ===================================================================
---- libvisual-0.4.0.orig/libvisual/lv_math.c
-+++ libvisual-0.4.0/libvisual/lv_math.c
+--- libvisual.orig/libvisual/lv_math.c
++++ libvisual/libvisual/lv_math.c
 @@ -31,6 +31,9 @@
  #include "lv_bits.h"
  #include "lv_math.h"
@@ -15,10 +15,10 @@ Index: libvisual-0.4.0/libvisual/lv_math.c
  /* This file is getting big and bloated because of the large chunks of simd code. When all is in place we'll take a serious
   * look how we can reduce this. For example by using macros for common blocks. */
  
-Index: libvisual-0.4.0/libvisual/lv_bmp.c
+Index: libvisual/libvisual/lv_bmp.c
 ===================================================================
---- libvisual-0.4.0.orig/libvisual/lv_bmp.c
-+++ libvisual-0.4.0/libvisual/lv_bmp.c
+--- libvisual.orig/libvisual/lv_bmp.c
++++ libvisual/libvisual/lv_bmp.c
 @@ -282,7 +282,8 @@ int visual_bitmap_load (VisVideo *video,
  	}
  

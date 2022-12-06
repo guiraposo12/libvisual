@@ -2,10 +2,10 @@ Description: fix for X86_FXSR_MAGIC. (Closes: #456856, #608784)
 Author: Pierre Habouzit <madcoder@debian.org>
 Reviewed-by: Steve Langasek <vorlon@debian.org>
 Last-Update: 2011-10-26
-Index: libvisual-0.4.0/libvisual/lv_cpu.c
+Index: libvisual/libvisual/lv_cpu.c
 ===================================================================
---- libvisual-0.4.0.orig/libvisual/lv_cpu.c
-+++ libvisual-0.4.0/libvisual/lv_cpu.c
+--- libvisual.orig/libvisual/lv_cpu.c
++++ libvisual/libvisual/lv_cpu.c
 @@ -76,7 +76,7 @@ static int cpuid (unsigned int ax, unsig
  
  /* The sigill handlers */

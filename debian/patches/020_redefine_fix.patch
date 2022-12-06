@@ -1,10 +1,10 @@
 Description: fix redefine.
 Author: Brandon Holtsclaw <me@brandonholtsclaw.com>
 Last-Update: 2010-05-02
-Index: libvisual-0.4.0/libvisual/lv_defines.h
+Index: libvisual/libvisual/lv_defines.h
 ===================================================================
---- libvisual-0.4.0.orig/libvisual/lv_defines.h
-+++ libvisual-0.4.0/libvisual/lv_defines.h
+--- libvisual.orig/libvisual/lv_defines.h
++++ libvisual/libvisual/lv_defines.h
 @@ -63,7 +63,6 @@
  
  /* Compiler specific optimalization macros */
