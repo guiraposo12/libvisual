@@ -1,5 +1,6 @@
 Description: fix a FTCBFS caused by old AC_PATH_PROG. (see #884798)
 Author: Joao Eriberto Mota Filho <eriberto@debian.org>
+Forwarded: https://github.com/Libvisual/libvisual/pull/120
 Last-Update: 2018-11-03
 Index: libvisual/configure.ac
 ===================================================================
