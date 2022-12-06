@@ -7,6 +7,7 @@ libvisual (0.4.0-19) unstable; urgency=medium
   * debian/copyright:
       - Updated packaging copyright data.
       - Updated Upstream-Contact field.
+  * debian/patches/: added a leading '0' to each patch name.
   * debian/watch: updated the search rule to make it compliant with new
     standards of the GitHub.
 
