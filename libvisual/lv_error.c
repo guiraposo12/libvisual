@@ -106,7 +106,7 @@ static const char *__lv_error_human_readable[] = {
 	[VISUAL_ERROR_MORPH_NULL] =			N_("VisMorph is NULL"),
 	[VISUAL_ERROR_MORPH_PLUGIN_NULL] =		N_("VisMorph it's plugin is NULL"),
 
-	[VISUAL_ERROR_OS_SCHED] =			N_("The scheduler related call wasn't succesful."),
+	[VISUAL_ERROR_OS_SCHED] =			N_("The scheduler related call wasn't successful."),
 	[VISUAL_ERROR_OS_SCHED_NOT_SUPPORTED] =		N_("Scheduler operations are not supported on the platform."),
 
 	[VISUAL_ERROR_PALETTE_NULL] =			N_("VisPalette is NULL"),
@@ -198,7 +198,7 @@ static const char *__lv_error_human_readable[] = {
 	[VISUAL_ERROR_VIDEO_INVALID_SCALE_METHOD] =	N_("Invalid scale method given"),
 	[VISUAL_ERROR_VIDEO_INVALID_ROTATE] =		N_("Invalid rotate degrees given"),
 	[VISUAL_ERROR_VIDEO_OUT_OF_BOUNDS] =		N_("Given coordinates are out of bounds"),
-	[VISUAL_ERROR_VIDEO_NOT_INDENTICAL] =		N_("Given VisVideos are not indentical"),
+	[VISUAL_ERROR_VIDEO_NOT_INDENTICAL] =		N_("Given VisVideos are not identical"),
 	[VISUAL_ERROR_VIDEO_NOT_TRANSFORMED] =		N_("VisVideo is not depth transformed as requested")
 };
 

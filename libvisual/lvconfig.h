@@ -23,10 +23,10 @@
 #define VISUAL_BIG_ENDIAN	(0)
 #define VISUAL_LITTLE_ENDIAN	(1)
 
-typedef unsigned int visual_size_t;
-#define VISUAL_SIZE_T_FORMAT	"u"
+typedef unsigned long visual_size_t;
+#define VISUAL_SIZE_T_FORMAT	"lu"
 
-#define VISUAL_ARCH_X86
+#define VISUAL_ARCH_X86_64
 
 #define VISUAL_OS_LINUX
 
