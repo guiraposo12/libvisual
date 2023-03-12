@@ -20,6 +20,7 @@ libvisual (0.4.1-1) experimental; urgency=medium
         050_fix-spelling-errors.patch, 060_add_german_translation.patch,
         070_fix_some_GCC_warnings.patch, 080_fix_spelling.patch,
         090_update-DE-translation.patch, 095_fix-FTCBFS.patch)
+  * debian/tests/control: set the CI test as superficial.
   * debian/watch: fixed to search for libvisual instead of libvisual-plugins.
 
  -- Joao Eriberto Mota Filho <eriberto@debian.org>  Sat, 11 Mar 2023 23:08:41 -0300
