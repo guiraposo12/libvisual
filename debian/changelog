@@ -2,6 +2,7 @@ libvisual (0.4.1-1) experimental; urgency=medium
 
   * QA upload.
   * New upstream version 0.4.1.
+  * debian/control: bumped Standards-Version to 4.6.2.
   * debian/watch: fixed to search for libvisual instead of libvisual-plugins.
 
  -- Joao Eriberto Mota Filho <eriberto@debian.org>  Sat, 11 Mar 2023 23:08:41 -0300
