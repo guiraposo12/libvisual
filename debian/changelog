@@ -5,6 +5,7 @@ libvisual (0.4.1-1) experimental; urgency=medium
   * debian/control:
       - Added libsdl1.2-dev to Build-Depends field.
       - Bumped Standards-Version to 4.6.2.
+  * debina/de.po: removed because the upstream added this file to source code.
   * debian/patches/:
       - Removed all old patches because the upstream applied them to the source
         code. Thanks! (010_fix_x86_fxsr_magic.patch, 020_redefine_fix.patch,
