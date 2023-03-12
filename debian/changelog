@@ -1,3 +1,10 @@
+libvisual (0.4.1-1) experimental; urgency=medium
+
+  * QA upload.
+  * New upstream version 0.4.1.
+
+ -- Joao Eriberto Mota Filho <eriberto@debian.org>  Sat, 11 Mar 2023 23:08:41 -0300
+
 libvisual (0.4.0-19) unstable; urgency=medium
 
   * QA upload.
