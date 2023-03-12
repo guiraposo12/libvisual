@@ -1,7 +1,7 @@
 libvisual (0.4.1-1) experimental; urgency=medium
 
   * QA upload.
-  * New upstream version 0.4.1.
+  * New upstream version 0.4.1. (Closes: #1028355)
   * debian/control:
       - Added libsdl1.2-dev to Build-Depends field.
       - Bumped Standards-Version to 4.6.2.
