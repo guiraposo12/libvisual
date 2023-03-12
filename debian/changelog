@@ -5,6 +5,13 @@ libvisual (0.4.1-1) experimental; urgency=medium
   * debian/control:
       - Added libsdl1.2-dev to Build-Depends field.
       - Bumped Standards-Version to 4.6.2.
+  * debian/copyright:
+      - Converted the last paragraph of the licenses in comments.
+      - Fixed licensing text for gettext.h.
+      - Removed no longer needed block for
+        debian/patches/60_add_german_translation.patch. This patch was dropped.
+      - Removed upstream names not listed from Copyright statements.
+      - Updated packaging copyright years.
   * debina/de.po: removed because the upstream added this file to source code.
   * debian/patches/:
       - Removed all old patches because the upstream applied them to the source
