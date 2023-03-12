@@ -12,7 +12,9 @@ libvisual (0.4.1-1) experimental; urgency=medium
         debian/patches/60_add_german_translation.patch. This patch was dropped.
       - Removed upstream names not listed from Copyright statements.
       - Updated packaging copyright years.
-  * debina/de.po: removed because the upstream added this file to source code.
+  * debian/de.po: removed because the upstream added this file to source code.
+  * debian/libvisual-0.4-0.examples: created to install the examples from
+    source code.
   * debian/patches/:
       - Removed all old patches because the upstream applied them to the source
         code. Thanks! (010_fix_x86_fxsr_magic.patch, 020_redefine_fix.patch,

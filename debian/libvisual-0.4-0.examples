@@ -1,0 +1,4 @@
+examples/Makefile.am
+examples/README
+examples/morphsdl.c
+examples/simplesdl.c
