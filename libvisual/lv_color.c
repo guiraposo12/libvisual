@@ -260,7 +260,7 @@ uint32_t visual_color_to_uint32 (VisColor *color)
 
 	visual_log_return_val_if_fail (color != NULL, 0);
 
-	colors = (256 << 24) |
+	colors = (0xFF << 24) |
 		(color->r << 16) |
 		(color->g << 8) |
 		(color->b);
@@ -270,15 +270,18 @@ uint32_t visual_color_to_uint32 (VisColor *color)
 
 uint16_t visual_color_to_uint16 (VisColor *color)
 {
-	_color16 colors;
+	union {
+	    _color16 channels;
+	    uint16_t raw;
+	} colors;
 
 	visual_log_return_val_if_fail (color != NULL, 0);
 
-	colors.r = color->r >> 2;
-	colors.g = color->g >> 3;
-	colors.b = color->b >> 2;
+	colors.channels.r = color->r >> 2;
+	colors.channels.g = color->g >> 3;
+	colors.channels.b = color->b >> 2;
 
-	return *((uint16_t *) &colors);
+	return colors.raw;
 }
 
 VisColor *visual_color_black ()

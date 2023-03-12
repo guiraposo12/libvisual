@@ -14,7 +14,6 @@
 
 @SET_MAKE@
 
-
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -89,7 +88,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = libvisual
+EXTRA_PROGRAMS = simplesdl$(EXEEXT) morphsdl$(EXEEXT)
+subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
@@ -101,64 +101,25 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
 	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-DIST_COMMON = $(srcdir)/Makefile.am $(library_include_HEADERS) \
-	$(am__DIST_COMMON)
+DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
-am__vpath_adj = case $$p in \
-    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
-    *) f=$$p;; \
-  esac;
-am__strip_dir = f=`echo $$p | sed -e 's|^.*/||'`;
-am__install_max = 40
-am__nobase_strip_setup = \
-  srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*|]/\\\\&/g'`
-am__nobase_strip = \
-  for p in $$list; do echo "$$p"; done | sed -e "s|$$srcdirstrip/||"
-am__nobase_list = $(am__nobase_strip_setup); \
-  for p in $$list; do echo "$$p $$p"; done | \
-  sed "s| $$srcdirstrip/| |;"' / .*\//!s/ .*/ ./; s,\( .*\)/[^/]*$$,\1,' | \
-  $(AWK) 'BEGIN { files["."] = "" } { files[$$2] = files[$$2] " " $$1; \
-    if (++n[$$2] == $(am__install_max)) \
-      { print $$2, files[$$2]; n[$$2] = 0; files[$$2] = "" } } \
-    END { for (dir in files) print dir, files[dir] }'
-am__base_list = \
-  sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
-  sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__uninstall_files_from_dir = { \
-  test -z "$$files" \
-    || { test ! -d "$$dir" && test ! -f "$$dir" && test ! -r "$$dir"; } \
-    || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
-         $(am__cd) "$$dir" && rm -f $$files; }; \
-  }
-am__installdirs = "$(DESTDIR)$(libdir)" \
-	"$(DESTDIR)$(library_includedir)"
-LTLIBRARIES = $(lib_LTLIBRARIES)
-libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_LIBADD =
-am_libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_OBJECTS = lv_actor.lo \
-	lv_input.lo lv_event.lo lv_bin.lo lv_plugin.lo lv_video.lo \
-	lv_video_simd.lo lv_mem.lo lv_audio.lo lv_fourier.lo \
-	lv_list.lo lv_log.lo lv_palette.lo lv_libvisual.lo \
-	lv_songinfo.lo lv_morph.lo lv_bmp.lo lv_param.lo lv_cpu.lo \
-	lv_color.lo lv_time.lo lv_random.lo lv_error.lo lv_ui.lo \
-	lv_thread.lo lv_object.lo lv_transform.lo lv_rectangle.lo \
-	lv_config.lo lv_ringbuffer.lo lv_buffer.lo lv_cache.lo \
-	lv_hashmap.lo lv_hashlist.lo lv_collection.lo lv_utils.lo \
-	lv_os.lo lv_math.lo lv_gl.lo
-libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_OBJECTS =  \
-	$(am_libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_OBJECTS)
+PROGRAMS = $(noinst_PROGRAMS)
+am_morphsdl_OBJECTS = morphsdl.$(OBJEXT)
+morphsdl_OBJECTS = $(am_morphsdl_OBJECTS)
+am__DEPENDENCIES_1 =
+morphsdl_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	../libvisual/libvisual-@LIBVISUAL_VERSION_SUFFIX@.la
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_LINK = $(LIBTOOL) $(AM_V_lt) \
-	--tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link \
-	$(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_LDFLAGS) $(LDFLAGS) \
-	-o $@
+am_simplesdl_OBJECTS = simplesdl.$(OBJEXT)
+simplesdl_OBJECTS = $(am_simplesdl_OBJECTS)
+simplesdl_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	../libvisual/libvisual-@LIBVISUAL_VERSION_SUFFIX@.la
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -174,26 +135,7 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/lv_actor.Plo \
-	./$(DEPDIR)/lv_audio.Plo ./$(DEPDIR)/lv_bin.Plo \
-	./$(DEPDIR)/lv_bmp.Plo ./$(DEPDIR)/lv_buffer.Plo \
-	./$(DEPDIR)/lv_cache.Plo ./$(DEPDIR)/lv_collection.Plo \
-	./$(DEPDIR)/lv_color.Plo ./$(DEPDIR)/lv_config.Plo \
-	./$(DEPDIR)/lv_cpu.Plo ./$(DEPDIR)/lv_error.Plo \
-	./$(DEPDIR)/lv_event.Plo ./$(DEPDIR)/lv_fourier.Plo \
-	./$(DEPDIR)/lv_gl.Plo ./$(DEPDIR)/lv_hashlist.Plo \
-	./$(DEPDIR)/lv_hashmap.Plo ./$(DEPDIR)/lv_input.Plo \
-	./$(DEPDIR)/lv_libvisual.Plo ./$(DEPDIR)/lv_list.Plo \
-	./$(DEPDIR)/lv_log.Plo ./$(DEPDIR)/lv_math.Plo \
-	./$(DEPDIR)/lv_mem.Plo ./$(DEPDIR)/lv_morph.Plo \
-	./$(DEPDIR)/lv_object.Plo ./$(DEPDIR)/lv_os.Plo \
-	./$(DEPDIR)/lv_palette.Plo ./$(DEPDIR)/lv_param.Plo \
-	./$(DEPDIR)/lv_plugin.Plo ./$(DEPDIR)/lv_random.Plo \
-	./$(DEPDIR)/lv_rectangle.Plo ./$(DEPDIR)/lv_ringbuffer.Plo \
-	./$(DEPDIR)/lv_songinfo.Plo ./$(DEPDIR)/lv_thread.Plo \
-	./$(DEPDIR)/lv_time.Plo ./$(DEPDIR)/lv_transform.Plo \
-	./$(DEPDIR)/lv_ui.Plo ./$(DEPDIR)/lv_utils.Plo \
-	./$(DEPDIR)/lv_video.Plo ./$(DEPDIR)/lv_video_simd.Plo
+am__depfiles_remade = ./$(DEPDIR)/morphsdl.Po ./$(DEPDIR)/simplesdl.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -213,14 +155,13 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_SOURCES)
-DIST_SOURCES = $(libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_SOURCES)
+SOURCES = $(morphsdl_SOURCES) $(simplesdl_SOURCES)
+DIST_SOURCES = $(morphsdl_SOURCES) $(simplesdl_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-HEADERS = $(library_include_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -238,7 +179,7 @@ am__define_uniq_tagged_files = \
   unique=`for i in $$list; do \
     if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
   done | $(am__uniquify_input)`
-am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/depcomp
+am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/depcomp README
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
@@ -294,7 +235,7 @@ LDFLAGS = @LDFLAGS@
 LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
-LIBS = @LIBS@ -L. -L$(libdir) $(LV_THREAD_LIBS) @LTLIBINTL@
+LIBS = @LIBS@
 LIBS_DYNAMIC_LOADER = @LIBS_DYNAMIC_LOADER@
 LIBTOOL = @LIBTOOL@
 LIBVISUAL_INCLUDE_DIR = @LIBVISUAL_INCLUDE_DIR@
@@ -403,39 +344,13 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-library_includedir = $(LIBVISUAL_INCLUDE_DIR)/libvisual
-library_include_HEADERS = lvconfig.h libvisual.h lv_actor.h \
-			  lv_audio.h lv_bin.h lv_common.h lv_fourier.h \
-			  lv_input.h lv_event.h lv_keysym.h \
-			  lv_list.h lv_log.h lv_palette.h lv_plugin.h \
-			  lv_video.h lv_libvisual.h lv_songinfo.h \
-			  lv_morph.h lv_bmp.h lv_param.h lv_mem.h \
-			  lv_bits.h lv_cpu.h lv_color.h \
-			  lv_time.h lv_random.h lv_error.h lv_ui.h \
-			  lv_types.h lv_thread.h lv_object.h \
-			  lv_transform.h lv_rectangle.h lv_ringbuffer.h \
-			  lv_buffer.h lv_config.h lv_hashmap.h \
-			  lv_hashlist.h lv_cache.h lv_collection.h \
-			  lv_utils.h lv_os.h lv_math.h lv_gl.h lv_defines.h
-
-lib_LTLIBRARIES = libvisual-@LIBVISUAL_VERSION_SUFFIX@.la
-PLUGPATH = $(libdir)/libvisual
-AM_CFLAGS = -DPLUGPATH="\"$(LIBVISUAL_PLUGINS_BASE_DIR)\"" \
-	$(LV_THREAD_CFLAGS)
-
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libvisual \
-	   -I$(top_builddir) -I$(top_builddir)/libvisual
-
-libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_LDFLAGS = -export-dynamic -no-undefined
-libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_SOURCES = lv_actor.c lv_input.c lv_event.c \
-		       lv_bin.c lv_plugin.c lv_video.c lv_video_simd.c lv_mem.c \
-		       lv_audio.c lv_fourier.c lv_list.c lv_log.c lv_palette.c \
-		       lv_libvisual.c lv_songinfo.c lv_morph.c lv_bmp.c lv_param.c \
-		       lv_cpu.c lv_color.c lv_time.c lv_random.c lv_error.c lv_ui.c \
-		       lv_thread.c lv_object.c lv_transform.c lv_rectangle.c lv_config.c \
-		       lv_ringbuffer.c lv_buffer.c lv_cache.c lv_hashmap.c lv_hashlist.c \
-		       lv_collection.c lv_utils.c lv_os.c lv_math.c lv_gl.c gettext.h
-
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/examples -I$(top_builddir)
+AM_CFLAGS = $(SDL_CFLAGS) $(VISUAL_CFLAGS)
+noinst_PROGRAMS = @EXAMPLES@
+simplesdl_LDADD = $(SDL_LIBS) ../libvisual/libvisual-@LIBVISUAL_VERSION_SUFFIX@.la
+morphsdl_LDADD = $(SDL_LIBS) ../libvisual/libvisual-@LIBVISUAL_VERSION_SUFFIX@.la
+simplesdl_SOURCES = simplesdl.c
+morphsdl_SOURCES = morphsdl.c
 all: all-am
 
 .SUFFIXES:
@@ -449,9 +364,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu libvisual/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu examples/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu libvisual/Makefile
+	  $(AUTOMAKE) --gnu examples/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -470,43 +385,22 @@ $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
 
-install-libLTLIBRARIES: $(lib_LTLIBRARIES)
-	@$(NORMAL_INSTALL)
-	@list='$(lib_LTLIBRARIES)'; test -n "$(libdir)" || list=; \
-	list2=; for p in $$list; do \
-	  if test -f $$p; then \
-	    list2="$$list2 $$p"; \
-	  else :; fi; \
-	done; \
-	test -z "$$list2" || { \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(libdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(libdir)" || exit 1; \
-	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(libdir)'"; \
-	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(libdir)"; \
-	}
+clean-noinstPROGRAMS:
+	@list='$(noinst_PROGRAMS)'; test -n "$$list" || exit 0; \
+	echo " rm -f" $$list; \
+	rm -f $$list || exit $$?; \
+	test -n "$(EXEEXT)" || exit 0; \
+	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
+	echo " rm -f" $$list; \
+	rm -f $$list
 
-uninstall-libLTLIBRARIES:
-	@$(NORMAL_UNINSTALL)
-	@list='$(lib_LTLIBRARIES)'; test -n "$(libdir)" || list=; \
-	for p in $$list; do \
-	  $(am__strip_dir) \
-	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(libdir)/$$f'"; \
-	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(libdir)/$$f"; \
-	done
+morphsdl$(EXEEXT): $(morphsdl_OBJECTS) $(morphsdl_DEPENDENCIES) $(EXTRA_morphsdl_DEPENDENCIES) 
+	@rm -f morphsdl$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(morphsdl_OBJECTS) $(morphsdl_LDADD) $(LIBS)
 
-clean-libLTLIBRARIES:
-	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
-	@list='$(lib_LTLIBRARIES)'; \
-	locs=`for p in $$list; do echo $$p; done | \
-	      sed 's|^[^/]*$$|.|; s|/[^/]*$$||; s|$$|/so_locations|' | \
-	      sort -u`; \
-	test -z "$$locs" || { \
-	  echo rm -f $${locs}; \
-	  rm -f $${locs}; \
-	}
-
-libvisual-@LIBVISUAL_VERSION_SUFFIX@.la: $(libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_OBJECTS) $(libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_DEPENDENCIES) $(EXTRA_libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_DEPENDENCIES) 
-	$(AM_V_CCLD)$(libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_LINK) -rpath $(libdir) $(libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_OBJECTS) $(libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_LIBADD) $(LIBS)
+simplesdl$(EXEEXT): $(simplesdl_OBJECTS) $(simplesdl_DEPENDENCIES) $(EXTRA_simplesdl_DEPENDENCIES) 
+	@rm -f simplesdl$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(simplesdl_OBJECTS) $(simplesdl_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -514,45 +408,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_actor.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_audio.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_bin.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_bmp.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_buffer.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_cache.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_collection.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_color.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_config.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_cpu.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_error.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_event.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_fourier.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_gl.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_hashlist.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_hashmap.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_input.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_libvisual.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_list.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_log.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_math.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_mem.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_morph.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_object.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_os.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_palette.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_param.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_plugin.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_random.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_rectangle.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_ringbuffer.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_songinfo.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_thread.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_time.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_transform.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_ui.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_utils.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_video.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lv_video_simd.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/morphsdl.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/simplesdl.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -586,27 +443,6 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
-install-library_includeHEADERS: $(library_include_HEADERS)
-	@$(NORMAL_INSTALL)
-	@list='$(library_include_HEADERS)'; test -n "$(library_includedir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(library_includedir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(library_includedir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(library_includedir)'"; \
-	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(library_includedir)" || exit $$?; \
-	done
-
-uninstall-library_includeHEADERS:
-	@$(NORMAL_UNINSTALL)
-	@list='$(library_include_HEADERS)'; test -n "$(library_includedir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(library_includedir)'; $(am__uninstall_files_from_dir)
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -694,11 +530,8 @@ distdir-am: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES) $(HEADERS)
+all-am: Makefile $(PROGRAMS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(library_includedir)"; do \
-	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
-	done
 install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
@@ -731,49 +564,12 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
+clean-am: clean-generic clean-libtool clean-noinstPROGRAMS \
 	mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/lv_actor.Plo
-	-rm -f ./$(DEPDIR)/lv_audio.Plo
-	-rm -f ./$(DEPDIR)/lv_bin.Plo
-	-rm -f ./$(DEPDIR)/lv_bmp.Plo
-	-rm -f ./$(DEPDIR)/lv_buffer.Plo
-	-rm -f ./$(DEPDIR)/lv_cache.Plo
-	-rm -f ./$(DEPDIR)/lv_collection.Plo
-	-rm -f ./$(DEPDIR)/lv_color.Plo
-	-rm -f ./$(DEPDIR)/lv_config.Plo
-	-rm -f ./$(DEPDIR)/lv_cpu.Plo
-	-rm -f ./$(DEPDIR)/lv_error.Plo
-	-rm -f ./$(DEPDIR)/lv_event.Plo
-	-rm -f ./$(DEPDIR)/lv_fourier.Plo
-	-rm -f ./$(DEPDIR)/lv_gl.Plo
-	-rm -f ./$(DEPDIR)/lv_hashlist.Plo
-	-rm -f ./$(DEPDIR)/lv_hashmap.Plo
-	-rm -f ./$(DEPDIR)/lv_input.Plo
-	-rm -f ./$(DEPDIR)/lv_libvisual.Plo
-	-rm -f ./$(DEPDIR)/lv_list.Plo
-	-rm -f ./$(DEPDIR)/lv_log.Plo
-	-rm -f ./$(DEPDIR)/lv_math.Plo
-	-rm -f ./$(DEPDIR)/lv_mem.Plo
-	-rm -f ./$(DEPDIR)/lv_morph.Plo
-	-rm -f ./$(DEPDIR)/lv_object.Plo
-	-rm -f ./$(DEPDIR)/lv_os.Plo
-	-rm -f ./$(DEPDIR)/lv_palette.Plo
-	-rm -f ./$(DEPDIR)/lv_param.Plo
-	-rm -f ./$(DEPDIR)/lv_plugin.Plo
-	-rm -f ./$(DEPDIR)/lv_random.Plo
-	-rm -f ./$(DEPDIR)/lv_rectangle.Plo
-	-rm -f ./$(DEPDIR)/lv_ringbuffer.Plo
-	-rm -f ./$(DEPDIR)/lv_songinfo.Plo
-	-rm -f ./$(DEPDIR)/lv_thread.Plo
-	-rm -f ./$(DEPDIR)/lv_time.Plo
-	-rm -f ./$(DEPDIR)/lv_transform.Plo
-	-rm -f ./$(DEPDIR)/lv_ui.Plo
-	-rm -f ./$(DEPDIR)/lv_utils.Plo
-	-rm -f ./$(DEPDIR)/lv_video.Plo
-	-rm -f ./$(DEPDIR)/lv_video_simd.Plo
+		-rm -f ./$(DEPDIR)/morphsdl.Po
+	-rm -f ./$(DEPDIR)/simplesdl.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -790,13 +586,13 @@ info: info-am
 
 info-am:
 
-install-data-am: install-library_includeHEADERS
+install-data-am:
 
 install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-libLTLIBRARIES
+install-exec-am:
 
 install-html: install-html-am
 
@@ -819,45 +615,8 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/lv_actor.Plo
-	-rm -f ./$(DEPDIR)/lv_audio.Plo
-	-rm -f ./$(DEPDIR)/lv_bin.Plo
-	-rm -f ./$(DEPDIR)/lv_bmp.Plo
-	-rm -f ./$(DEPDIR)/lv_buffer.Plo
-	-rm -f ./$(DEPDIR)/lv_cache.Plo
-	-rm -f ./$(DEPDIR)/lv_collection.Plo
-	-rm -f ./$(DEPDIR)/lv_color.Plo
-	-rm -f ./$(DEPDIR)/lv_config.Plo
-	-rm -f ./$(DEPDIR)/lv_cpu.Plo
-	-rm -f ./$(DEPDIR)/lv_error.Plo
-	-rm -f ./$(DEPDIR)/lv_event.Plo
-	-rm -f ./$(DEPDIR)/lv_fourier.Plo
-	-rm -f ./$(DEPDIR)/lv_gl.Plo
-	-rm -f ./$(DEPDIR)/lv_hashlist.Plo
-	-rm -f ./$(DEPDIR)/lv_hashmap.Plo
-	-rm -f ./$(DEPDIR)/lv_input.Plo
-	-rm -f ./$(DEPDIR)/lv_libvisual.Plo
-	-rm -f ./$(DEPDIR)/lv_list.Plo
-	-rm -f ./$(DEPDIR)/lv_log.Plo
-	-rm -f ./$(DEPDIR)/lv_math.Plo
-	-rm -f ./$(DEPDIR)/lv_mem.Plo
-	-rm -f ./$(DEPDIR)/lv_morph.Plo
-	-rm -f ./$(DEPDIR)/lv_object.Plo
-	-rm -f ./$(DEPDIR)/lv_os.Plo
-	-rm -f ./$(DEPDIR)/lv_palette.Plo
-	-rm -f ./$(DEPDIR)/lv_param.Plo
-	-rm -f ./$(DEPDIR)/lv_plugin.Plo
-	-rm -f ./$(DEPDIR)/lv_random.Plo
-	-rm -f ./$(DEPDIR)/lv_rectangle.Plo
-	-rm -f ./$(DEPDIR)/lv_ringbuffer.Plo
-	-rm -f ./$(DEPDIR)/lv_songinfo.Plo
-	-rm -f ./$(DEPDIR)/lv_thread.Plo
-	-rm -f ./$(DEPDIR)/lv_time.Plo
-	-rm -f ./$(DEPDIR)/lv_transform.Plo
-	-rm -f ./$(DEPDIR)/lv_ui.Plo
-	-rm -f ./$(DEPDIR)/lv_utils.Plo
-	-rm -f ./$(DEPDIR)/lv_video.Plo
-	-rm -f ./$(DEPDIR)/lv_video_simd.Plo
+		-rm -f ./$(DEPDIR)/morphsdl.Po
+	-rm -f ./$(DEPDIR)/simplesdl.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -874,26 +633,23 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLTLIBRARIES \
-	uninstall-library_includeHEADERS
+uninstall-am:
 
 .MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--depfiles check check-am clean \
-	clean-generic clean-libLTLIBRARIES clean-libtool cscopelist-am \
+	clean-generic clean-libtool clean-noinstPROGRAMS cscopelist-am \
 	ctags ctags-am distclean distclean-compile distclean-generic \
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-am install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
 	install-exec-am install-html install-html-am install-info \
-	install-info-am install-libLTLIBRARIES \
-	install-library_includeHEADERS install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
+	install-info-am install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am uninstall-libLTLIBRARIES \
-	uninstall-library_includeHEADERS
+	tags tags-am uninstall uninstall-am
 
 .PRECIOUS: Makefile
 

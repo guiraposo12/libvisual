@@ -4,7 +4,7 @@ AC_PREREQ(2.57)
 dnl Version numbers
 m4_define([libvisual_version_major], [0])
 m4_define([libvisual_version_minor], [4])
-m4_define([libvisual_version_micro], [0])
+m4_define([libvisual_version_micro], [1])
 
 m4_define([libvisual_version], [libvisual_version_major.libvisual_version_minor.libvisual_version_micro])
 
@@ -98,10 +98,10 @@ AC_LIBTOOL_WIN32_DLL
 AC_LIBTOOL_DLOPEN
 AC_PROG_LIBTOOL
 
-AC_PATH_PROG(PKG_CONFIG, [pkg-config], [no])
-if test x$PKG_CONFIG = xno ; then
-  AC_MSG_WARN([*** pkg-config not found. See http://www.freedesktop.org/software/pkgconfig/.
-	       *** You will need pkg-config to compile against Libvisual Library])
+PKG_PROG_PKG_CONFIG
+if test x$PKG_CONFIG = x ; then
+  AC_MSG_ERROR([*** pkg-config not found. See http://www.freedesktop.org/software/pkgconfig/.
+                  *** You will need pkg-config to compile against Libvisual Library])
 fi
 if $PKG_CONFIG --atleast-pkgconfig-version 0.14 ; then
   :
@@ -155,7 +155,7 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [GETTEXT package name])
 AC_DEFINE_UNQUOTED(LOCALEDIR, "${prefix}/share/locale", [String catalog location])
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.14.1])
+AM_GNU_GETTEXT_VERSION([0.19])
 
 dnl -------------------------------
 dnl Check for native thread support
@@ -165,6 +165,7 @@ dnl
 dnl Test program for basic POSIX threads functionality (taken from Glib)
 dnl
 m4_define([lv_thread_test],[
+#include <stdlib.h>
 #include <pthread.h> 
 int check_me = 0;
 void* func(void* data) {check_me = 42; return &check_me;}
@@ -191,7 +192,7 @@ AIX_COMPILE_INFO="AIX's C compiler needs to be called by a different name, when
 		with the right compiler. Ususally just '_r' is appended 
 		to the compiler name."
 
-AC_ARG_ENABLE([enable_threads],
+AC_ARG_ENABLE([threads],
   AC_HELP_STRING([--enable-threads],
 		[Turn on basic thread support @<:@default=enabled@:>@]),
 		[enable_threads=$enableval],
@@ -373,6 +374,28 @@ AC_SUBST(VISUAL_LIBS)
 dnl ******************************
 dnl Arguments to specify certain features.
 dnl ******************************
+AC_ARG_ENABLE([examples],
+            AC_HELP_STRING([--disable-examples],
+                           [Do not build example programs @<:@default=enabled@:>@]),
+           [examples=$enableval],
+           [examples=yes])
+AC_MSG_CHECKING([wheter to build example programs])
+if test x$examples = xyes ; then
+  AC_MSG_RESULT([yes])
+  # Find SDL to build the examples.
+  AC_PATH_TOOL(SDL_CONFIG, [sdl-config])
+  if test x$SDL_CONFIG = x ; then
+       AC_MSG_ERROR([*** sdl-config not found.
+                       If you have installed from binaries, probably you have not
+                       installed SDL development package.
+                       See http://www.libsdl.org])
+  fi
+  # On success, this will set and substitute SDL_CFLAGS and SDL_LIBS
+  AM_PATH_SDL(1.2.0,,AC_MSG_ERROR([*** SDL >= 1.2.0 not installed - please install first]))
+  AC_SUBST([EXAMPLES], ['simplesdl morphsdl'])
+else
+  AC_MSG_RESULT([no])
+fi
 
 dnl ******************************
 dnl Debugging stuff 
@@ -780,6 +803,7 @@ echo >>$outfile
    lv_alpha=$lv_alpha
    lv_sparc=$lv_sparc
    lv_ix86=$lv_ix86
+   lv_x86_64=$lv_x86_64
    lv_powerpc=$lv_powerpc
    lv_arch_unknown=$lv_arch_unknown
 
@@ -816,11 +840,12 @@ esac
 ])
 				    
 AC_CONFIG_FILES([
-m4/Makefile
+po/Makevars
 po/Makefile.in
 Makefile
 libvisual.pc
 libvisual/Makefile
+examples/Makefile
 ])
 #
 # For now this are not included in the package
