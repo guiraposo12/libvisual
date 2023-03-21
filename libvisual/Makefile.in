@@ -282,6 +282,7 @@ GMSGFMT_015 = @GMSGFMT_015@
 GREP = @GREP@
 GTHREAD2_CFLAGS = @GTHREAD2_CFLAGS@
 GTHREAD2_LIBS = @GTHREAD2_LIBS@
+HAVE_CXX11 = @HAVE_CXX11@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -335,12 +336,12 @@ PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 POSUB = @POSUB@
 RANLIB = @RANLIB@
 SDL_CFLAGS = @SDL_CFLAGS@
-SDL_CONFIG = @SDL_CONFIG@
 SDL_LIBS = @SDL_LIBS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
+TOOLS_LV_TOOL = @TOOLS_LV_TOOL@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 VISUAL_CFLAGS = @VISUAL_CFLAGS@
@@ -423,8 +424,8 @@ PLUGPATH = $(libdir)/libvisual
 AM_CFLAGS = -DPLUGPATH="\"$(LIBVISUAL_PLUGINS_BASE_DIR)\"" \
 	$(LV_THREAD_CFLAGS)
 
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libvisual \
-	   -I$(top_builddir) -I$(top_builddir)/libvisual
+AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/libvisual \
+	-I$(top_builddir) -I$(top_builddir)/libvisual
 
 libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_LDFLAGS = -export-dynamic -no-undefined
 libvisual_@LIBVISUAL_VERSION_SUFFIX@_la_SOURCES = lv_actor.c lv_input.c lv_event.c \

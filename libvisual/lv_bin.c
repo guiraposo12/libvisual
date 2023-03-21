@@ -693,6 +693,7 @@ int visual_bin_switch_finalize (VisBin *bin)
 	visual_log (VISUAL_LOG_DEBUG, "Entering...");
 	if (bin->managed == TRUE)
 		visual_object_unref (VISUAL_OBJECT (bin->actor));
+	visual_video_set_palette (bin->actvideo, NULL);
 
 	/* Copy over the depth to be sure, and for GL plugins */
 /*	bin->actvideo->depth = bin->actmorphvideo->depth;
@@ -850,6 +851,8 @@ int visual_bin_run (VisBin *bin)
 			bin->actor->video->depth == VISUAL_VIDEO_DEPTH_GL) {
 
 			visual_bin_switch_finalize (bin);
+
+			visual_video_set_palette (bin->actvideo, visual_actor_get_palette (bin->actor));
 
 			/* We can't start drawing yet, the client needs to catch up with
 			 * the depth change */
