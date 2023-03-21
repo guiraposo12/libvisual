@@ -1,6 +1,7 @@
 libvisual (0.4.2-1) experimental; urgency=medium
 
   * New upstream version 0.4.2.
+  * debian/watch: updated the search rule.
 
  -- Joao Eriberto Mota Filho <eriberto@debian.org>  Tue, 21 Mar 2023 11:19:06 -0300
 
