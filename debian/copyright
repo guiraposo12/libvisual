@@ -9,11 +9,17 @@ Copyright: 2002-2006 Dennis Smit <ds@nerds-incorporated.org, synap@users.sf.net>
            2002-2004 Sepp Wijnands <mrrazz@nerds-incorporated.org,
                                     sw@nerds-incorporated.org>
            2002-2004 Tom Wimmenhove <nohup@nerds-incorporated.org>
+           2023      Libvisual team
 License: LGPL-2.1+
 
 Files: libvisual/gettext.h
 Copyright: 1995-2002 Free Software Foundation, Inc
 License: LGPL-2+
+
+Files: tools/lv-tool/lv-tool.cpp
+Copyright: 2004-2006 Dennis Smit
+           2012-2023 Libvisual team
+License: GPL-2+
 
 Files: po/*
 Copyright: 2005      ? <dprotti@users.sourceforge.net>
@@ -69,3 +75,21 @@ Comment:
  GNU Library General Public License has been superseded by the GNU Lesser
  General Public License. However, the source code uses the old licensing
  yet.
+
+License: GPL-2+
+ This package is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <https://www.gnu.org/licenses/>
+Comment:
+ On Debian systems, the complete text of the GNU General
+ Public License version 2 can be found in "/usr/share/common-licenses/GPL-2".
+
