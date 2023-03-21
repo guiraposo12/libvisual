@@ -1,5 +1,6 @@
 libvisual (0.4.2-1) experimental; urgency=medium
 
+  * QA upload.
   * New upstream version 0.4.2.
   * Ran wrap-and-sort.
   * debian/control: added autoconf-archive to Build-Depends field.
