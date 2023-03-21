@@ -1,6 +1,7 @@
 libvisual (0.4.2-1) experimental; urgency=medium
 
   * New upstream version 0.4.2.
+  * Ran wrap-and-sort.
   * debian/control: added autoconf-archive to Build-Depends field.
   * debian/copyright: added new upstream rights.
   * debian/watch: updated the search rule.
