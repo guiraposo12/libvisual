@@ -54,3 +54,21 @@ Description: audio visualization framework
  This package provides the runtime libraries for libvisual. Libvisual is not
  very useful without visualization plugins, so it is highly recommended to
  install the libvisual-0.4-plugins package.
+
+Package: lv-tool-0.4
+Section: sound
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}, libvisual-0.4-plugins
+Suggests: libvisual-0.4-plugins
+Description: tool from Libvisual to visualize a music from audio players
+ Libvisual is a generic visualization framework that allows applications
+ to easily access and manage visualization plugins.
+ .
+ Audio visualization is the process of making pretty moving images that
+ are correlated in some way to the audio currently being played by a media
+ player. Most audio visualization is tied to a specific application or media
+ player, making it difficult to share code. Libvisual allows applications
+ to use existing visualization plugins written for the libvisual framework.
+ .
+ This package provides lv-tool. It allows visualizing music from any audio
+ player on Linux (using e.g. an ALSA loopback device or a PulseAudio monitor).
