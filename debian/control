@@ -58,8 +58,7 @@ Description: audio visualization framework
 Package: lv-tool-0.4
 Section: sound
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}, libvisual-0.4-plugins
-Suggests: libvisual-0.4-plugins
+Depends: ${misc:Depends}, ${shlibs:Depends}, libvisual-0.4-plugins (>= 0.4.2)
 Description: tool from Libvisual to visualize a music from audio players
  Libvisual is a generic visualization framework that allows applications
  to easily access and manage visualization plugins.
