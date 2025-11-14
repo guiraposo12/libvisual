@@ -6,8 +6,8 @@ Build-Depends: autoconf-archive,
                autopoint,
                debhelper-compat (= 13),
                libsdl1.2-dev,
-               pkg-config
-Standards-Version: 4.6.2
+               pkgconf
+Standards-Version: 4.7.0
 Homepage: http://libvisual.org
 Rules-Requires-Root: no
 Vcs-Browser: https://salsa.debian.org/debian/libvisual
@@ -18,7 +18,7 @@ Section: libdevel
 Architecture: any
 Depends: libc6-dev | libc-dev,
          libvisual-0.4-0 (= ${binary:Version}),
-         pkg-config,
+         pkgconf,
          ${misc:Depends}
 Description: audio visualization framework (development files)
  Libvisual is a generic visualization framework that allows applications
