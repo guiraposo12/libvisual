@@ -1,0 +1,29 @@
+Replace exit() with abort() to comply with Debian Policy
+
+Author: Guilherme Eduardo Corrêa Raposo <guilhermeraposo@alunos.utfpr.edu.br>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout https://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: (upstream|backport|vendor|other), (<patch-url>|commit:<commit-id>)
+Bug: <upstream-bugtracker-url>
+Bug-Debian: https://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: (no|not-needed|<patch-forwarded-url>)
+Applied-Upstream: <version>, (<commit-url>|commit:<commid-id>)
+Reviewed-By: <name and email of someone who approved/reviewed the patch>
+Last-Update: 2025-11-30
+
+--- libvisual-0.4.2.orig/libvisual/lv_error.c
++++ libvisual-0.4.2/libvisual/lv_error.c
+@@ -225,7 +225,7 @@ int visual_error_raise ()
+ #if !defined(VISUAL_OS_WIN32)
+ 		raise (SIGTRAP);
+ #endif
+-		exit (1);
++		abort();
+ 	}
+ 
+ 	return error_handler (error_handler_priv);
