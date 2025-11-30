@@ -1,8 +1,15 @@
-libvisual (0.4.2-3ubuntu1) UNRELEASED; urgency=medium
+libvisual (0.4.2-4) unstable; urgency=medium
 
-  * Update debian/copyright packaging year.
+  * QA upload.
+  * debian/patches:
+    - Add fix-exit-in-library.patch to replace exit() with abort() in
+      shared library. Fixes critical Lintian error.
+  * debian/copyright:
+    - Update packaging copyright information (2025).
+  * debian/upstream/metadata:
+    - Add upstream metadata information.
 
- -- Guilherme Eduardo Corrêa Raposo <guilhermeraposo@alunos.utfpr.edu.br>  Sun, 30 Nov 2025 17:11:12 -0300
+ -- Guilherme Eduardo Corrêa Raposo <guilhermeraposo@alunos.utfpr.edu.br>  Sun, 30 Nov 2025 18:30:00 -0300
 
 libvisual (0.4.2-3) unstable; urgency=medium
 
