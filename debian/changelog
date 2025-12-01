@@ -4,7 +4,7 @@ libvisual (0.4.2-4) unstable; urgency=medium
   * debian/copyright: Update packaging copyright information.
   * debian/upstream/metadata: Add upstream metadata information.
 
- -- Guilherme Eduardo Corrêa Raposo <guieduraposo@gmail.com>  Mon, 01 Dec 2025 15:13:45 -0300
+ -- Guilherme Eduardo Corrêa Raposo <guieduraposo@gmail.com>  Mon, 01 Dec 2025 16:27:00 -0300
 
 libvisual (0.4.2-3) unstable; urgency=medium
 
