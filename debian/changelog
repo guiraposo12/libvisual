@@ -2,8 +2,6 @@ libvisual (0.4.2-4) unstable; urgency=medium
 
   * QA upload.
   * debian/copyright: Update packaging copyright information.
-  * debian/patches/fix-exit-in-library.patch: Replace exit() with abort()
-    in shared library.
   * debian/upstream/metadata: Add upstream metadata information.
 
  -- Guilherme Eduardo Corrêa Raposo <guieduraposo@gmail.com>  Mon, 01 Dec 2025 15:13:45 -0300
