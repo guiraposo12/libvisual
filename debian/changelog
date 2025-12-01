@@ -1,10 +1,10 @@
 libvisual (0.4.2-4) unstable; urgency=medium
 
   * QA upload.
-  * debian/copyright: Update packaging copyright information.
-  * debian/upstream/metadata: Add upstream metadata information.
+  * debian/copyright: Add missing author Federico Molara.
+  * debian/upstream/metadata: Update fields per DEP-12 and remove invalid URLs.
 
- -- Guilherme Eduardo Corrêa Raposo <guieduraposo@gmail.com>  Mon, 01 Dec 2025 16:27:00 -0300
+ -- Guilherme Eduardo Corrêa Raposo <guieduraposo@gmail.com>  Mon, 01 Dec 2025 19:50:04 -0300
 
 libvisual (0.4.2-3) unstable; urgency=medium
 

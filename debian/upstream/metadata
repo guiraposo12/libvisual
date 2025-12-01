@@ -1,6 +1,5 @@
-Archive: GitHub
-Bug-Database: https://github.com/Libvisual/libvisual/issues
-Bug-Submit: https://github.com/Libvisual/libvisual/issues/new
-Changelog: https://github.com/Libvisual/libvisual/releases
+Name: libvisual
 Repository: https://github.com/Libvisual/libvisual.git
 Repository-Browse: https://github.com/Libvisual/libvisual
+Bug-Database: https://github.com/Libvisual/libvisual/issues
+Bug-Submit: https://github.com/Libvisual/libvisual/issues/new
