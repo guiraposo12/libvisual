@@ -6,7 +6,7 @@ libvisual (0.4.2-4) unstable; urgency=medium
     in shared library.
   * debian/upstream/metadata: Add upstream metadata information.
 
- -- Guilherme Eduardo Corrêa Raposo <guieduraposo@gmail.com>  Sun, 30 Nov 2025 18:30:00 -0300
+ -- Guilherme Eduardo Corrêa Raposo <guieduraposo@gmail.com>  Mon, 01 Dec 2025 15:13:45 -0300
 
 libvisual (0.4.2-3) unstable; urgency=medium
 
